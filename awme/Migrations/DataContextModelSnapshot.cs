@@ -33,6 +33,9 @@ namespace awme.Migrations
                     b.Property<int?>("Age")
                         .HasColumnType("int");
 
+                    b.Property<int>("AnimalTypeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("AvatarImage")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -45,12 +48,9 @@ namespace awme.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TypeId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("TypeId");
+                    b.HasIndex("AnimalTypeId");
 
                     b.ToTable("Animals");
                 });
@@ -75,12 +75,17 @@ namespace awme.Migrations
             modelBuilder.Entity("awme.Data.Models.Animal", b =>
                 {
                     b.HasOne("awme.Data.Models.AnimalType", "Type")
-                        .WithMany()
-                        .HasForeignKey("TypeId")
+                        .WithMany("Animals")
+                        .HasForeignKey("AnimalTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Type");
+                });
+
+            modelBuilder.Entity("awme.Data.Models.AnimalType", b =>
+                {
+                    b.Navigation("Animals");
                 });
 #pragma warning restore 612, 618
         }

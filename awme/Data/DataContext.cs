@@ -9,5 +9,6 @@ namespace awme.Data
 
         public DbSet<AnimalType> AnimalTypes { get; set; }
         public DbSet<Animal> Animals { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

@@ -1,6 +1,9 @@
 global using awme.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
+using Microsoft.Extensions.FileProviders;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    options.UseSqlServer("Data Source=localhost\\SQLEXPRESS;Initial Catalog=awme;Integrated Security=True;Trusted_Connection=True;MultipleActiveResultSets=True;Encrypt=false;TrustServerCertificate=true");
+    options.UseSqlServer(builder.Configuration["ConnectionString:DefaultConnection"]);
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -29,5 +32,4 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
-var a = builder.Configuration.GetSection("ConnectionString:DefaultConnection").Value;
 app.Run();

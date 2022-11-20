@@ -1,11 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace awme.Data.DTO
+namespace awme.Data.Dto.User
 {
-    public class UserDto
+    public class UserLoginRequest
     {
-        [Required]
+        [Required, EmailAddress]
         public string Email { get; set; }
+
+        [Required]
         public string Password { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using awme.Data.DTO;
+﻿using awme.Data.Dto.User;
 using awme.Data.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -24,8 +24,12 @@ namespace awme.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(UserDto request)
+        public async Task<ActionResult<User>> Register(UserRegisterRequest request)
         {
+            if (_context.Users.Any(u => u.Email == request.Email))
+            {
+                return BadRequest("User already exists");
+            }
             HashController.CreatePasswordHash(
                 request.Password,
                 out byte[] passwordHash,
@@ -33,26 +37,28 @@ namespace awme.Controllers
 
             User user = new()
             {
+                Name = request.Name,
                 Email = request.Email,
                 PasswordSalt = passwordSalt,
-                PasswordHash = passwordHash
+                PasswordHash = passwordHash,
+                Role = "Admin"
             };
-            _context.Users.Add(user);
-            _context.SaveChanges();
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
             return Ok(user);
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<User>> Login(UserDto request)
+        public async Task<ActionResult<string>> Login(UserLoginRequest request)
         {
-            User? user = _context.Users.FirstOrDefault(el => el.Email == request.Email);
+            User? user = await _context.Users.FirstOrDefaultAsync(el => el.Email == request.Email);
             if (user == null)
             {
-                return BadRequest("No account found on email.");
+                return BadRequest("Wrong email or password");
             }
             if (!HashController.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
             {
-                return BadRequest("Wrong password.");
+                return BadRequest("Wrong email or password");
             }
 
             string token = CreateToken(user);
@@ -63,7 +69,8 @@ namespace awme.Controllers
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Role, user.Role)
             };
             var key= new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                 _configuration["JwtConfig:Secret"]!));

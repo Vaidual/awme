@@ -1,19 +1,14 @@
-﻿using System.Text.Json.Serialization;
+﻿using awme.Data.Models;
 
-namespace awme.Data.Models
+namespace awme.Data.Dto.User
 {
-    public class Animal
+    public class AnimalAddRequest
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public int? Age { get; set; }
         public string? Description { get; set; }
         public string? AvatarImage { get; set; }
-        [JsonIgnore]
-        public AnimalType Type { get; set; }
         public int AnimalTypeId { get; set; }
-        [JsonIgnore]
-        public User User { get; set; }
         public int UserId { get; set; }
     }
 }

@@ -8,6 +8,8 @@
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
         public string Role { get; set; }
+        public string? Description { get; set; }
+        public string? AvatarImage { get; set; }
         public List<Animal> Animals { get; set; }
         public List<Post> Posts { get; set; }
         public List<Chat> Chats { get; set; }

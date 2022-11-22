@@ -9,8 +9,7 @@ namespace awme.Data.Models
         public DateTime LikedAt { get; set; }
         [JsonIgnore]
         public Profile Profile { get; set; }
-        [ForeignKey("Username")]
-        public string ProfileUsername { get; set; }
+        public int ProfileId { get; set; }
         [JsonIgnore]
         public Post post { get; set; }
         public int PostId { get; set; }

@@ -11,9 +11,8 @@ namespace awme.Data.Models
         public List<Like> Likes { get; set; }
         public List<Comment> Comments { get; set; }
         public DateTime CreatedAt { get; set; }
-        [ForeignKey("Username")]
-        public string UserProfileUsername { get; set; }
+        public int ProfileId { get; set; }
         [JsonIgnore]
-        public Profile UserProfile { get; set; }
+        public Profile Profile { get; set; }
     }
 }

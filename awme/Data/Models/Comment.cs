@@ -11,7 +11,6 @@ namespace awme.Data.Models
         public int PostId { get; set; }
         public Post Post { get; set; }
         public Profile Profile { get; set; }
-        [ForeignKey("Username")]
-        public string ProfileUsername { get; set; }
+        public int ProfileId { get; set; }
     }
 }

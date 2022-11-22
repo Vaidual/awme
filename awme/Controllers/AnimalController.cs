@@ -1,4 +1,4 @@
-﻿using awme.Data.Dto.User;
+﻿using awme.Data.Dto.Animal;
 using awme.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

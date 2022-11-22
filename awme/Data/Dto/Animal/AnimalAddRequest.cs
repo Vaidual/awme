@@ -1,6 +1,6 @@
 ﻿using awme.Data.Models;
 
-namespace awme.Data.Dto.User
+namespace awme.Data.Dto.Animal
 {
     public class AnimalAddRequest
     {

@@ -33,15 +33,15 @@ namespace awme.Data
                 });
 
             modelBuilder.Entity<Chat>().HasOne(c => c.FirstProfile).WithOne()
-            .HasForeignKey<Chat>(a => a.FirstProfileUsername).OnDelete(DeleteBehavior.NoAction);
+            .HasForeignKey<Chat>(a => a.FirstProfileId).OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Chat>().HasOne(a => a.SecondProfile).WithOne()
-                  .HasForeignKey<Chat>(a => a.SecondProfileUsername).OnDelete(DeleteBehavior.NoAction);
+                  .HasForeignKey<Chat>(a => a.SecondProfileId).OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<Comment>().HasOne(a => a.Profile).WithOne()
-                .HasForeignKey<Comment>(a => a.ProfileUsername).OnDelete(DeleteBehavior.NoAction);
-            modelBuilder.Entity<Like>().HasOne(a => a.Profile).WithOne()
-                .HasForeignKey<Like>(a => a.ProfileUsername).OnDelete(DeleteBehavior.NoAction);
+            //modelBuilder.Entity<Comment>().HasOne(a => a.Profile).WithOne()
+            //    .HasForeignKey<Comment>(a => a.ProfileUsername).OnDelete(DeleteBehavior.NoAction);
+            //modelBuilder.Entity<Like>().HasOne(a => a.Profile).WithOne()
+            //    .HasForeignKey<Like>(a => a.ProfileUsername).OnDelete(DeleteBehavior.NoAction);
         }
 
         public DbSet<AnimalType> AnimalTypes { get; set; }

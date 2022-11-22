@@ -4,9 +4,11 @@ namespace awme.Data.Models
 {
     public class Profile
     {
-        [Key]
+        public int Id { get; set; }
         public string Username { get; set; }
         public string Nickname { get; set; }
+        public Gender? Gender { get; set; }
+        public string? Location { get; set; }
         public int UserId { get; set; }
         public User User { get; set; }
         public List<Profile> Followers { get; set; }

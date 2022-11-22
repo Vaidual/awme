@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace awme.Data.Models
 {
@@ -6,11 +7,12 @@ namespace awme.Data.Models
     {
         public int Id { get; set; }
         public string Content { get; set; }
-        public List<string> Images { get; set; } = new List<string>();
+        public string Images { get; set; }
         public List<Like> Likes { get; set; }
         public List<Comment> Comments { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string UserProfileId { get; set; }
+        [ForeignKey("Username")]
+        public string UserProfileUsername { get; set; }
         [JsonIgnore]
         public Profile UserProfile { get; set; }
     }

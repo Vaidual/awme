@@ -37,7 +37,8 @@ namespace awme.Controllers
 
             User user = new()
             {
-                Name = request.Name,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
                 Email = request.Email,
                 PasswordSalt = passwordSalt,
                 PasswordHash = passwordHash,

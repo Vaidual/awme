@@ -4,7 +4,10 @@ namespace awme.Data.Dto.User
 {
     public class UserRegisterRequest
     {
-        public string Name { get; set; }
+        [Required, MinLength(1)]
+        public string FirstName { get; set; }
+        [Required, MinLength(1)]
+        public string LastName { get; set; }
         [Required, EmailAddress]
         public string Email { get; set; }
 

@@ -8,10 +8,10 @@ namespace awme.Data.Models
         public string Content { get; set; }
         public List<string> Images { get; set; } = new List<string>();
         public List<Like> Likes { get; set; }
+        public List<Comment> Comments { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime? ModifiedAt { get; set; }
-        public int UserId { get; set; }
+        public string UserProfileId { get; set; }
         [JsonIgnore]
-        public User User { get; set; }
+        public Profile UserProfile { get; set; }
     }
 }

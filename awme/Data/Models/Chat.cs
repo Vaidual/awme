@@ -5,12 +5,12 @@ namespace awme.Data.Models
     public class Chat
     {
         public int Id { get; set; }
-        public int FirstUserId { get; set; }
+        public string FirstUserId { get; set; }
         [JsonIgnore]
-        public User FirstUser { get; set; }
-        public int SecondUserId { get; set; }
+        public Profile FirstUser { get; set; }
+        public string SecondUserId { get; set; }
         [JsonIgnore]
-        public User SecondUser { get; set; }
+        public Profile SecondUser { get; set; }
         public List<Message> Messages { get; set; }
     }
 }

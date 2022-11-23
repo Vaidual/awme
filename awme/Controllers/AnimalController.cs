@@ -18,15 +18,15 @@ namespace awme.Controllers
             _context = context;
         }
 
-        [HttpGet("get-all")]
-        public async Task<ActionResult<List<Animal>>> Get()
+        [HttpGet()]
+        public async Task<ActionResult<List<Animal>>> GetAnimals()
         {
             List<Animal> animals = _context.Animals.ToList();
             return Ok(animals);
         }
 
-        [HttpGet("get-all-by-user-id/{id}")]
-        public async Task<ActionResult<List<Animal>>> GealAllByUserId(int id)
+        [HttpGet("user-animals/{id}")]
+        public async Task<ActionResult<List<Animal>>> GetUserAnimals(int id)
         {
             User? user = await _context.Users.FirstOrDefaultAsync(el => el.Id == id);
             if (user == null)
@@ -37,7 +37,7 @@ namespace awme.Controllers
         }
 
         [HttpGet("get-by-id/{id}")]
-        public async Task<ActionResult<Animal>> GetById(int id)
+        public async Task<ActionResult<Animal>> GetAnimal(int id)
         {
             Animal? animal = await _context.Animals.FirstOrDefaultAsync(el => el.Id == id);
             if (animal == null)

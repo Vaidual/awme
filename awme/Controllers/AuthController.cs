@@ -43,7 +43,7 @@ namespace awme.Controllers
                 Email = request.Email,
                 PasswordSalt = passwordSalt,
                 PasswordHash = passwordHash,
-                Role = "Admin"
+                Role = "User"
             };
             await _userService.AddUser(user);
             return CreatedAtAction("GetUser", new { id = user.Id}, user);

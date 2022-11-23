@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "IYgU8yEWYC4QMFHG3ne6nh/BJ0SowIOS23TFXU8Irte9XEQgIblPc7G6Yv+i+/JEgOur5ngTYbEzX29nbacX5w==",
+  "dgSpecHash": "5Bd+/QLvDHJ34c9dMCNqTil1oZeBxwQwtWrdDrDJAi22nOvovQQ8gU8fkpnHhG0PMtT5BhrDl3ERunnVglPPdw==",
   "success": true,
   "projectFilePath": "D:\\projects\\dotNet\\awme\\awme\\awme.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Vaidual\\.nuget\\packages\\automapper\\12.0.0\\automapper.12.0.0.nupkg.sha512",
+    "C:\\Users\\Vaidual\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.0\\automapper.extensions.microsoft.dependencyinjection.12.0.0.nupkg.sha512",
     "C:\\Users\\Vaidual\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\Vaidual\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
     "C:\\Users\\Vaidual\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

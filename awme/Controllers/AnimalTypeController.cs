@@ -1,5 +1,8 @@
 ﻿using awme.Data.Dto.User;
 using awme.Data.Models;
+using awme.Migrations;
+using awme.Services.AnimalTypeService;
+using awme.Services.UserServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,47 +11,39 @@ namespace awme.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AnimalTypeController : Controller
     {
-        private readonly DataContext _context;
-        public AnimalTypeController(DataContext context)
+        private readonly IAnimalTypeService _animalTypeService;
+        private readonly IConfiguration _configuration;
+        public AnimalTypeController(IAnimalTypeService animalTypeService, IConfiguration configuration)
         {
-            _context = context;
+            _animalTypeService = animalTypeService;
+            _configuration = configuration;
         }
 
-        [HttpGet("get-all"), Authorize(Roles = "Admin,User")]
+        [HttpGet()]
         public async Task<ActionResult<List<AnimalType>>> GetAll()
         {
-            List<AnimalType> types = await _context.AnimalTypes.ToListAsync();
+            List<AnimalType> types = await _animalTypeService.GetTypes();
             return Ok(types);
         }
 
-        [HttpPost("add"), Authorize(Roles = "Admin")]
+        [HttpPost(), Authorize(Roles = "Admin")]
         public async Task<ActionResult<AnimalType>> Add(string type)
         {
-            if (_context.AnimalTypes.Any(el => el.TypeName == type))
+            if (await _animalTypeService.CheckIfTypeExists(type))
             {
                 return BadRequest("The type already exists.");
             }
-            AnimalType annimalType = new()
-            {
-                TypeName = type,
-            };
-            await _context.AnimalTypes.AddAsync(annimalType);
-            await _context.SaveChangesAsync();
-            return Ok(annimalType);
+            var animalType = await _animalTypeService.AddType(type);
+            return Ok(CreatedAtAction(nameof(GetAll), new { id = animalType.Id }, animalType));
         }
 
         [HttpDelete("delete-by-id/{id}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteById(int id)
         {
-            AnimalType? type = await _context.AnimalTypes.FirstOrDefaultAsync(el => el.Id == id);
-            if (type == null)
-            {
-                return BadRequest("The type does not exist.");
-            }
-            _context.Remove(type);
-            await _context.SaveChangesAsync();
+            await _animalTypeService.DeleteType(id);
             return Ok();
         }
     }

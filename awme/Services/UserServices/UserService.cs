@@ -1,4 +1,5 @@
-﻿using awme.Data.Models;
+﻿using AutoMapper;
+using awme.Data.Models;
 using awme.Migrations;
 using Azure.Core;
 using Microsoft.AspNetCore.JsonPatch;
@@ -10,10 +11,12 @@ namespace awme.Services.UserServices
     public class UserService : IUserService
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public UserService(DataContext context)
+        public UserService(DataContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<User> AddUser(User user)

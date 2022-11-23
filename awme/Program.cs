@@ -1,4 +1,5 @@
 global using awme.Data;
+using awme.Services.AnimalTypeService;
 using awme.Services.UserServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,9 @@ builder.Services.AddDbContext<DataContext>(options =>
 });
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAnimalTypeService, AnimalTypeService>();
+
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

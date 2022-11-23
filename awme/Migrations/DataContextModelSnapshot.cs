@@ -48,9 +48,6 @@ namespace awme.Migrations
                     b.Property<int?>("Age")
                         .HasColumnType("int");
 
-                    b.Property<int>("AnimalTypeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("AvatarImage")
                         .HasColumnType("nvarchar(max)");
 
@@ -64,12 +61,15 @@ namespace awme.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TypeId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AnimalTypeId");
+                    b.HasIndex("TypeId");
 
                     b.HasIndex("UserId");
 
@@ -151,7 +151,8 @@ namespace awme.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.HasIndex("ProfileId");
+                    b.HasIndex("ProfileId")
+                        .IsUnique();
 
                     b.ToTable("Comments");
                 });
@@ -177,7 +178,8 @@ namespace awme.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.HasIndex("ProfileId");
+                    b.HasIndex("ProfileId")
+                        .IsUnique();
 
                     b.ToTable("Likes");
                 });
@@ -317,8 +319,8 @@ namespace awme.Migrations
                             Email = "admin@admin.com",
                             FirstName = "Admin",
                             LastName = "Admin",
-                            PasswordHash = new byte[] { 246, 214, 17, 142, 161, 12, 109, 22, 250, 147, 81, 211, 213, 194, 17, 104, 171, 238, 79, 110, 155, 23, 162, 80, 136, 241, 205, 183, 118, 142, 79, 202, 247, 124, 33, 240, 16, 239, 145, 162, 53, 203, 108, 43, 46, 249, 26, 78, 212, 34, 64, 7, 130, 253, 12, 159, 221, 165, 69, 92, 143, 125, 153, 84 },
-                            PasswordSalt = new byte[] { 180, 110, 176, 72, 135, 206, 212, 66, 225, 102, 221, 113, 16, 236, 206, 175, 13, 6, 29, 53, 228, 133, 86, 89, 206, 131, 180, 79, 170, 56, 252, 24, 207, 31, 99, 61, 41, 40, 3, 68, 205, 175, 105, 231, 149, 204, 21, 45, 159, 219, 25, 110, 165, 117, 246, 196, 162, 233, 206, 215, 84, 250, 208, 109, 43, 14, 165, 85, 49, 107, 165, 46, 19, 13, 184, 15, 53, 176, 250, 172, 154, 43, 42, 47, 156, 231, 243, 197, 90, 16, 93, 163, 16, 77, 205, 1, 141, 52, 189, 146, 195, 199, 97, 187, 214, 167, 76, 243, 4, 234, 172, 5, 224, 137, 4, 157, 188, 138, 184, 243, 176, 227, 26, 227, 77, 54, 33, 97 },
+                            PasswordHash = new byte[] { 52, 183, 244, 240, 13, 179, 163, 136, 25, 179, 201, 118, 129, 99, 135, 94, 121, 95, 208, 142, 239, 85, 53, 227, 9, 253, 205, 87, 146, 168, 28, 92, 205, 141, 41, 134, 189, 251, 80, 79, 192, 26, 139, 196, 249, 158, 25, 43, 47, 116, 240, 38, 71, 24, 5, 217, 123, 40, 210, 10, 121, 57, 117, 103 },
+                            PasswordSalt = new byte[] { 133, 232, 153, 17, 13, 114, 86, 183, 235, 85, 249, 138, 46, 210, 235, 161, 157, 72, 17, 235, 166, 49, 253, 82, 28, 32, 103, 123, 10, 17, 113, 20, 206, 235, 246, 46, 212, 67, 112, 123, 97, 22, 39, 145, 174, 181, 43, 52, 66, 247, 206, 91, 145, 186, 109, 78, 207, 15, 214, 117, 96, 88, 23, 9, 113, 187, 119, 44, 163, 179, 123, 103, 57, 234, 76, 246, 129, 80, 43, 92, 53, 66, 180, 204, 179, 213, 76, 238, 32, 132, 145, 178, 76, 144, 254, 196, 92, 157, 228, 143, 184, 106, 242, 74, 205, 29, 56, 140, 72, 129, 71, 232, 82, 171, 48, 238, 109, 1, 153, 123, 126, 154, 179, 78, 158, 171, 230, 185 },
                             Role = "Admin"
                         });
                 });
@@ -342,7 +344,7 @@ namespace awme.Migrations
                 {
                     b.HasOne("awme.Data.Models.AnimalType", "Type")
                         .WithMany("Animals")
-                        .HasForeignKey("AnimalTypeId")
+                        .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -389,9 +391,9 @@ namespace awme.Migrations
                         .IsRequired();
 
                     b.HasOne("awme.Data.Models.Profile", "Profile")
-                        .WithMany()
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne()
+                        .HasForeignKey("awme.Data.Models.Comment", "ProfileId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Post");
@@ -408,9 +410,9 @@ namespace awme.Migrations
                         .IsRequired();
 
                     b.HasOne("awme.Data.Models.Profile", "Profile")
-                        .WithMany()
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne()
+                        .HasForeignKey("awme.Data.Models.Like", "ProfileId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Profile");

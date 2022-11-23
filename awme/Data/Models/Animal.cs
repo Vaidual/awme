@@ -12,7 +12,7 @@ namespace awme.Data.Models
         public string? AvatarImage { get; set; }
         [JsonIgnore]
         public AnimalType Type { get; set; }
-        public int AnimalTypeId { get; set; }
+        public int TypeId { get; set; }
         [JsonIgnore]
         public User User { get; set; }
         public int UserId { get; set; }

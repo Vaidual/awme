@@ -55,7 +55,7 @@ namespace awme.Controllers
             {
                 return BadRequest("The user does not exist.");
             }
-            AnimalType? type = await _context.AnimalTypes.FirstOrDefaultAsync(el => el.Id == request.AnimalTypeId);
+            AnimalType? type = await _context.AnimalTypes.FirstOrDefaultAsync(el => el.Id == request.TypeId);
             if (type == null)
             {
                 return BadRequest("The type does not exist.");
@@ -68,8 +68,9 @@ namespace awme.Controllers
                 Type = type,
                 AvatarImage = request.AvatarImage,
                 User = user,
+                Gender = request.Gender,
             };
-            user.Animals.Add(animal);
+            _context.Animals.Add(animal);
             await _context.SaveChangesAsync();
             return Ok(animal); 
         }

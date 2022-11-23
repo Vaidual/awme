@@ -12,8 +12,8 @@ using awme.Data;
 namespace awme.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221122215004_IdAddedToProfile")]
-    partial class IdAddedToProfile
+    [Migration("20221122215708_AllModels")]
+    partial class AllModels
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -154,7 +154,8 @@ namespace awme.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.HasIndex("ProfileId");
+                    b.HasIndex("ProfileId")
+                        .IsUnique();
 
                     b.ToTable("Comments");
                 });
@@ -180,7 +181,8 @@ namespace awme.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.HasIndex("ProfileId");
+                    b.HasIndex("ProfileId")
+                        .IsUnique();
 
                     b.ToTable("Likes");
                 });
@@ -320,8 +322,8 @@ namespace awme.Migrations
                             Email = "admin@admin.com",
                             FirstName = "Admin",
                             LastName = "Admin",
-                            PasswordHash = new byte[] { 246, 214, 17, 142, 161, 12, 109, 22, 250, 147, 81, 211, 213, 194, 17, 104, 171, 238, 79, 110, 155, 23, 162, 80, 136, 241, 205, 183, 118, 142, 79, 202, 247, 124, 33, 240, 16, 239, 145, 162, 53, 203, 108, 43, 46, 249, 26, 78, 212, 34, 64, 7, 130, 253, 12, 159, 221, 165, 69, 92, 143, 125, 153, 84 },
-                            PasswordSalt = new byte[] { 180, 110, 176, 72, 135, 206, 212, 66, 225, 102, 221, 113, 16, 236, 206, 175, 13, 6, 29, 53, 228, 133, 86, 89, 206, 131, 180, 79, 170, 56, 252, 24, 207, 31, 99, 61, 41, 40, 3, 68, 205, 175, 105, 231, 149, 204, 21, 45, 159, 219, 25, 110, 165, 117, 246, 196, 162, 233, 206, 215, 84, 250, 208, 109, 43, 14, 165, 85, 49, 107, 165, 46, 19, 13, 184, 15, 53, 176, 250, 172, 154, 43, 42, 47, 156, 231, 243, 197, 90, 16, 93, 163, 16, 77, 205, 1, 141, 52, 189, 146, 195, 199, 97, 187, 214, 167, 76, 243, 4, 234, 172, 5, 224, 137, 4, 157, 188, 138, 184, 243, 176, 227, 26, 227, 77, 54, 33, 97 },
+                            PasswordHash = new byte[] { 164, 38, 234, 210, 198, 157, 210, 159, 106, 42, 211, 116, 202, 52, 173, 166, 235, 11, 175, 197, 224, 222, 186, 112, 160, 46, 204, 27, 129, 111, 38, 231, 237, 191, 139, 240, 38, 206, 147, 220, 139, 230, 35, 93, 219, 48, 251, 74, 216, 31, 37, 23, 197, 90, 218, 191, 78, 66, 78, 43, 253, 56, 201, 206 },
+                            PasswordSalt = new byte[] { 103, 173, 134, 112, 42, 69, 131, 189, 198, 37, 58, 150, 50, 183, 155, 144, 166, 248, 22, 212, 13, 25, 93, 167, 148, 67, 77, 255, 13, 253, 229, 111, 62, 181, 236, 203, 242, 223, 61, 204, 15, 133, 10, 5, 119, 101, 168, 145, 158, 90, 38, 131, 244, 85, 184, 192, 236, 2, 253, 0, 18, 224, 173, 108, 44, 127, 107, 94, 240, 11, 143, 26, 209, 153, 31, 6, 224, 62, 82, 99, 239, 72, 133, 19, 126, 231, 254, 132, 36, 0, 98, 175, 187, 133, 110, 219, 154, 244, 166, 207, 118, 246, 179, 113, 161, 80, 20, 17, 117, 247, 118, 202, 37, 214, 146, 117, 20, 247, 209, 44, 39, 104, 35, 155, 12, 31, 7, 91 },
                             Role = "Admin"
                         });
                 });
@@ -392,9 +394,9 @@ namespace awme.Migrations
                         .IsRequired();
 
                     b.HasOne("awme.Data.Models.Profile", "Profile")
-                        .WithMany()
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne()
+                        .HasForeignKey("awme.Data.Models.Comment", "ProfileId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Post");
@@ -411,9 +413,9 @@ namespace awme.Migrations
                         .IsRequired();
 
                     b.HasOne("awme.Data.Models.Profile", "Profile")
-                        .WithMany()
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne()
+                        .HasForeignKey("awme.Data.Models.Like", "ProfileId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Profile");

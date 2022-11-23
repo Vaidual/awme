@@ -1,5 +1,6 @@
 ﻿using awme.Data.Dto.User;
 using awme.Data.Models;
+using awme.Services.UserServices;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,20 +16,20 @@ namespace awme.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly IUserService _userService;
         private readonly IConfiguration _configuration;
-        public AuthController(DataContext context, IConfiguration configuration)
+        public AuthController(IUserService userService, IConfiguration configuration)
         {
-            _context = context;
+            _userService = userService;
             _configuration = configuration;
         }
 
         [HttpPost("register")]
         public async Task<ActionResult<User>> Register(UserRegisterRequest request)
         {
-            if (_context.Users.Any(u => u.Email == request.Email))
+            if (await _userService.CheckIfUserExistsByEmail(request.Email))
             {
-                return BadRequest("User already exists");
+                return StatusCode(403, $"User '{request.Email}' already exists.");
             }
             HashController.CreatePasswordHash(
                 request.Password,
@@ -44,22 +45,21 @@ namespace awme.Controllers
                 PasswordHash = passwordHash,
                 Role = "Admin"
             };
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
-            return Ok(user);
+            await _userService.AddUser(user);
+            return CreatedAtAction("GetUser", new { id = user.Id}, user);
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login(UserLoginRequest request)
         {
-            User? user = await _context.Users.FirstOrDefaultAsync(el => el.Email == request.Email);
+            User? user = await _userService.GetUserByEmail(request.Email);
             if (user == null)
             {
-                return BadRequest("Wrong email or password");
+                return Unauthorized("Wrong email or password");
             }
             if (!HashController.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
             {
-                return BadRequest("Wrong email or password");
+                return Unauthorized("Wrong email or password");
             }
 
             string token = CreateToken(user);

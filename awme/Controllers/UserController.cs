@@ -1,7 +1,10 @@
 ﻿using awme.Data.Dto.User;
 using awme.Data.Models;
+using awme.Services.UserServices;
+using Azure;
 using Azure.Core;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,70 +14,62 @@ namespace awme.Controllers
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-        private readonly DataContext _context;
-        public UserController(DataContext context)
+        private readonly IUserService _userService;
+        public UserController(IUserService userService)
         {
-            _context = context;
+            _userService = userService;
         }
 
-        [HttpGet("get-all"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<List<User>>> GetAll()
+        [HttpGet(), Authorize(Roles = "Admin")]
+        public async Task<ActionResult<List<User>>> Get()
         {
-            List<User> users = await _context.Users.ToListAsync();
+            List<User> users = await _userService.GetUsers();
             return Ok(users);
         }
 
-        [HttpGet("get-by-id/{id}"), Authorize(Roles = "Admin")]
+        [HttpGet("{id}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<User>> GetById(int id)
         {
-            User? user = await _context.Users.FirstOrDefaultAsync(el => el.Id == id);
+            User? user = await _userService.GetUser(id);
             if (user == null)
             {
-                return BadRequest("The user does not exist.");
+                return NotFound("The user does not exist.");
             }
             return Ok(user);
         }
 
-        [HttpPatch("change-role-by-id"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult> PatchRoleById(int id, string role)
+        [HttpPatch("{id}"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Patch(int id, JsonPatchDocument<User> userUpdates)
         {
-            User? user = await _context.Users.FirstOrDefaultAsync(el => el.Id == id);
+            User? user = await _userService.GetUser(id);
             if (user == null)
             {
-                return BadRequest("The user not exists.");
+                return NotFound("The user not exists.");
             }
-            user.Role = role;
-            await _context.SaveChangesAsync();
-            return Ok();
+            await _userService.UpdateUser(user, userUpdates);
+            return NoContent();
         }
 
-        [HttpDelete("delete"), Authorize(Roles = "User")]
-        public async Task<ActionResult> Delete(UserLoginRequest request)
+        [HttpDelete(), Authorize(Roles = "User")]
+        public async Task<ActionResult> DeleteWithApproving(UserLoginRequest request)
         {
-            User? user = await _context.Users.FirstOrDefaultAsync(el => el.Email == request.Email);
+            User? user = await _userService.GetUserByEmail(request.Email);
             if (user == null)
             {
-                return BadRequest("The user does not exist.");
+                return NotFound("The user does not exist.");
             }
             if (!HashController.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
             {
-                return BadRequest("Wrong password.");
+                return StatusCode(403, "Wrong password.");
             }
-            _context.Remove(user);
-            await _context.SaveChangesAsync();
+            await _userService.DeleteUser(user.Id);
             return Ok();
         }
 
         [HttpDelete("delete-by-id/{id}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteById(int id)
         {
-            User? user = await _context.Users.FirstOrDefaultAsync(el => el.Id == id);
-            if (user == null)
-            {
-                return BadRequest("The user does not exist.");
-            }
-            _context.Remove(user);
-            await _context.SaveChangesAsync();
+            await _userService.DeleteUser(id);
             return Ok();
         }
     }

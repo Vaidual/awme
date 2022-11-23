@@ -12,8 +12,8 @@ using awme.Data;
 namespace awme.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221122165426_AllModelsCreated")]
-    partial class AllModelsCreated
+    [Migration("20221122234947_AnimalTypeId")]
+    partial class AnimalTypeId
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,15 +27,15 @@ namespace awme.Migrations
 
             modelBuilder.Entity("ProfileProfile", b =>
                 {
-                    b.Property<string>("FollowersUsername")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("FollowersId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("FollowingUsername")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("FollowingId")
+                        .HasColumnType("int");
 
-                    b.HasKey("FollowersUsername", "FollowingUsername");
+                    b.HasKey("FollowersId", "FollowingId");
 
-                    b.HasIndex("FollowingUsername");
+                    b.HasIndex("FollowingId");
 
                     b.ToTable("ProfileProfile");
                 });
@@ -51,25 +51,28 @@ namespace awme.Migrations
                     b.Property<int?>("Age")
                         .HasColumnType("int");
 
-                    b.Property<int>("AnimalTypeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("AvatarImage")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("Gender")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AnimalTypeId");
+                    b.HasIndex("TypeId");
 
                     b.HasIndex("UserId");
 
@@ -101,25 +104,23 @@ namespace awme.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("FirstProfileUsername")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("FirstProfileId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("ProfileUsername")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int?>("ProfileId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("SecondProfileUsername")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("SecondProfileId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FirstProfileUsername")
+                    b.HasIndex("FirstProfileId")
                         .IsUnique();
 
-                    b.HasIndex("ProfileUsername");
+                    b.HasIndex("ProfileId");
 
-                    b.HasIndex("SecondProfileUsername")
+                    b.HasIndex("SecondProfileId")
                         .IsUnique();
 
                     b.ToTable("Chats");
@@ -146,15 +147,14 @@ namespace awme.Migrations
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ProfileUsername")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ProfileId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PostId");
 
-                    b.HasIndex("ProfileUsername")
+                    b.HasIndex("ProfileId")
                         .IsUnique();
 
                     b.ToTable("Comments");
@@ -174,15 +174,14 @@ namespace awme.Migrations
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ProfileUsername")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ProfileId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PostId");
 
-                    b.HasIndex("ProfileUsername")
+                    b.HasIndex("ProfileId")
                         .IsUnique();
 
                     b.ToTable("Likes");
@@ -203,12 +202,8 @@ namespace awme.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SenderUsername")
+                    b.Property<int>("SenderId")
                         .HasColumnType("int");
-
-                    b.Property<string>("SenderUsername1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("SentAt")
                         .HasColumnType("datetime2");
@@ -217,7 +212,7 @@ namespace awme.Migrations
 
                     b.HasIndex("ChatId");
 
-                    b.HasIndex("SenderUsername1");
+                    b.HasIndex("SenderId");
 
                     b.ToTable("Messages");
                 });
@@ -241,21 +236,29 @@ namespace awme.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserProfileUsername")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ProfileId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserProfileUsername");
+                    b.HasIndex("ProfileId");
 
                     b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("awme.Data.Models.Profile", b =>
                 {
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nickname")
                         .IsRequired()
@@ -264,7 +267,11 @@ namespace awme.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("Username");
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -315,8 +322,8 @@ namespace awme.Migrations
                             Email = "admin@admin.com",
                             FirstName = "Admin",
                             LastName = "Admin",
-                            PasswordHash = new byte[] { 208, 34, 163, 227, 219, 55, 206, 110, 65, 182, 90, 187, 95, 43, 81, 145, 60, 240, 84, 126, 233, 195, 200, 190, 17, 178, 213, 192, 19, 17, 185, 139, 225, 46, 69, 53, 123, 231, 131, 223, 5, 8, 86, 232, 84, 117, 46, 112, 131, 199, 251, 170, 10, 150, 14, 114, 154, 161, 127, 33, 25, 107, 9, 95 },
-                            PasswordSalt = new byte[] { 240, 237, 102, 188, 43, 100, 1, 0, 191, 97, 106, 173, 157, 46, 129, 43, 66, 99, 49, 5, 68, 99, 122, 106, 14, 141, 122, 202, 108, 245, 106, 100, 123, 92, 8, 198, 82, 158, 93, 223, 143, 254, 6, 8, 206, 11, 103, 229, 240, 110, 136, 178, 8, 153, 124, 160, 190, 245, 108, 43, 103, 83, 173, 149, 253, 98, 152, 68, 109, 239, 61, 134, 209, 138, 7, 14, 153, 160, 176, 149, 20, 253, 253, 148, 102, 73, 148, 249, 233, 227, 116, 191, 229, 172, 208, 189, 190, 151, 48, 3, 63, 244, 242, 229, 95, 133, 158, 36, 39, 4, 238, 106, 228, 62, 37, 84, 36, 81, 136, 223, 204, 20, 232, 188, 174, 195, 32, 144 },
+                            PasswordHash = new byte[] { 52, 183, 244, 240, 13, 179, 163, 136, 25, 179, 201, 118, 129, 99, 135, 94, 121, 95, 208, 142, 239, 85, 53, 227, 9, 253, 205, 87, 146, 168, 28, 92, 205, 141, 41, 134, 189, 251, 80, 79, 192, 26, 139, 196, 249, 158, 25, 43, 47, 116, 240, 38, 71, 24, 5, 217, 123, 40, 210, 10, 121, 57, 117, 103 },
+                            PasswordSalt = new byte[] { 133, 232, 153, 17, 13, 114, 86, 183, 235, 85, 249, 138, 46, 210, 235, 161, 157, 72, 17, 235, 166, 49, 253, 82, 28, 32, 103, 123, 10, 17, 113, 20, 206, 235, 246, 46, 212, 67, 112, 123, 97, 22, 39, 145, 174, 181, 43, 52, 66, 247, 206, 91, 145, 186, 109, 78, 207, 15, 214, 117, 96, 88, 23, 9, 113, 187, 119, 44, 163, 179, 123, 103, 57, 234, 76, 246, 129, 80, 43, 92, 53, 66, 180, 204, 179, 213, 76, 238, 32, 132, 145, 178, 76, 144, 254, 196, 92, 157, 228, 143, 184, 106, 242, 74, 205, 29, 56, 140, 72, 129, 71, 232, 82, 171, 48, 238, 109, 1, 153, 123, 126, 154, 179, 78, 158, 171, 230, 185 },
                             Role = "Admin"
                         });
                 });
@@ -325,13 +332,13 @@ namespace awme.Migrations
                 {
                     b.HasOne("awme.Data.Models.Profile", null)
                         .WithMany()
-                        .HasForeignKey("FollowersUsername")
+                        .HasForeignKey("FollowersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("awme.Data.Models.Profile", null)
                         .WithMany()
-                        .HasForeignKey("FollowingUsername")
+                        .HasForeignKey("FollowingId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
                 });
@@ -340,7 +347,7 @@ namespace awme.Migrations
                 {
                     b.HasOne("awme.Data.Models.AnimalType", "Type")
                         .WithMany("Animals")
-                        .HasForeignKey("AnimalTypeId")
+                        .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -359,17 +366,17 @@ namespace awme.Migrations
                 {
                     b.HasOne("awme.Data.Models.Profile", "FirstProfile")
                         .WithOne()
-                        .HasForeignKey("awme.Data.Models.Chat", "FirstProfileUsername")
+                        .HasForeignKey("awme.Data.Models.Chat", "FirstProfileId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("awme.Data.Models.Profile", null)
                         .WithMany("Chats")
-                        .HasForeignKey("ProfileUsername");
+                        .HasForeignKey("ProfileId");
 
                     b.HasOne("awme.Data.Models.Profile", "SecondProfile")
                         .WithOne()
-                        .HasForeignKey("awme.Data.Models.Chat", "SecondProfileUsername")
+                        .HasForeignKey("awme.Data.Models.Chat", "SecondProfileId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -388,7 +395,7 @@ namespace awme.Migrations
 
                     b.HasOne("awme.Data.Models.Profile", "Profile")
                         .WithOne()
-                        .HasForeignKey("awme.Data.Models.Comment", "ProfileUsername")
+                        .HasForeignKey("awme.Data.Models.Comment", "ProfileId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -407,7 +414,7 @@ namespace awme.Migrations
 
                     b.HasOne("awme.Data.Models.Profile", "Profile")
                         .WithOne()
-                        .HasForeignKey("awme.Data.Models.Like", "ProfileUsername")
+                        .HasForeignKey("awme.Data.Models.Like", "ProfileId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -424,7 +431,7 @@ namespace awme.Migrations
 
                     b.HasOne("awme.Data.Models.Profile", "Sender")
                         .WithMany()
-                        .HasForeignKey("SenderUsername1")
+                        .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -433,13 +440,13 @@ namespace awme.Migrations
 
             modelBuilder.Entity("awme.Data.Models.Post", b =>
                 {
-                    b.HasOne("awme.Data.Models.Profile", "UserProfile")
+                    b.HasOne("awme.Data.Models.Profile", "Profile")
                         .WithMany("Posts")
-                        .HasForeignKey("UserProfileUsername")
+                        .HasForeignKey("ProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("UserProfile");
+                    b.Navigation("Profile");
                 });
 
             modelBuilder.Entity("awme.Data.Models.Profile", b =>

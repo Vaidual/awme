@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace awme.Migrations
 {
     /// <inheritdoc />
-    public partial class AllModelsCreated : Migration
+    public partial class AllModels : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,17 +23,27 @@ namespace awme.Migrations
                 nullable: false,
                 defaultValue: "");
 
+            migrationBuilder.AddColumn<int>(
+                name: "Gender",
+                table: "Animals",
+                type: "int",
+                nullable: true);
+
             migrationBuilder.CreateTable(
                 name: "Profiles",
                 columns: table => new
                 {
-                    Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Nickname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Gender = table.Column<int>(type: "int", nullable: true),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Profiles", x => x.Username);
+                    table.PrimaryKey("PK_Profiles", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Profiles_Users_UserId",
                         column: x => x.UserId,
@@ -48,28 +58,28 @@ namespace awme.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstProfileUsername = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    SecondProfileUsername = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProfileUsername = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    FirstProfileId = table.Column<int>(type: "int", nullable: false),
+                    SecondProfileId = table.Column<int>(type: "int", nullable: false),
+                    ProfileId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Chats", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Chats_Profiles_FirstProfileUsername",
-                        column: x => x.FirstProfileUsername,
+                        name: "FK_Chats_Profiles_FirstProfileId",
+                        column: x => x.FirstProfileId,
                         principalTable: "Profiles",
-                        principalColumn: "Username");
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Chats_Profiles_ProfileUsername",
-                        column: x => x.ProfileUsername,
+                        name: "FK_Chats_Profiles_ProfileId",
+                        column: x => x.ProfileId,
                         principalTable: "Profiles",
-                        principalColumn: "Username");
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Chats_Profiles_SecondProfileUsername",
-                        column: x => x.SecondProfileUsername,
+                        name: "FK_Chats_Profiles_SecondProfileId",
+                        column: x => x.SecondProfileId,
                         principalTable: "Profiles",
-                        principalColumn: "Username");
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -81,16 +91,16 @@ namespace awme.Migrations
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Images = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserProfileUsername = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    ProfileId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Posts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Posts_Profiles_UserProfileUsername",
-                        column: x => x.UserProfileUsername,
+                        name: "FK_Posts_Profiles_ProfileId",
+                        column: x => x.ProfileId,
                         principalTable: "Profiles",
-                        principalColumn: "Username",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -98,23 +108,23 @@ namespace awme.Migrations
                 name: "ProfileProfile",
                 columns: table => new
                 {
-                    FollowersUsername = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FollowingUsername = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    FollowersId = table.Column<int>(type: "int", nullable: false),
+                    FollowingId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProfileProfile", x => new { x.FollowersUsername, x.FollowingUsername });
+                    table.PrimaryKey("PK_ProfileProfile", x => new { x.FollowersId, x.FollowingId });
                     table.ForeignKey(
-                        name: "FK_ProfileProfile_Profiles_FollowersUsername",
-                        column: x => x.FollowersUsername,
+                        name: "FK_ProfileProfile_Profiles_FollowersId",
+                        column: x => x.FollowersId,
                         principalTable: "Profiles",
-                        principalColumn: "Username",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProfileProfile_Profiles_FollowingUsername",
-                        column: x => x.FollowingUsername,
+                        name: "FK_ProfileProfile_Profiles_FollowingId",
+                        column: x => x.FollowingId,
                         principalTable: "Profiles",
-                        principalColumn: "Username");
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -123,8 +133,7 @@ namespace awme.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SenderUsername1 = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    SenderUsername = table.Column<int>(type: "int", nullable: false),
+                    SenderId = table.Column<int>(type: "int", nullable: false),
                     SentAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ChatId = table.Column<int>(type: "int", nullable: true)
@@ -138,10 +147,10 @@ namespace awme.Migrations
                         principalTable: "Chats",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Messages_Profiles_SenderUsername1",
-                        column: x => x.SenderUsername1,
+                        name: "FK_Messages_Profiles_SenderId",
+                        column: x => x.SenderId,
                         principalTable: "Profiles",
-                        principalColumn: "Username",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -155,7 +164,7 @@ namespace awme.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     PostId = table.Column<int>(type: "int", nullable: false),
-                    ProfileUsername = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    ProfileId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -167,10 +176,10 @@ namespace awme.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Comments_Profiles_ProfileUsername",
-                        column: x => x.ProfileUsername,
+                        name: "FK_Comments_Profiles_ProfileId",
+                        column: x => x.ProfileId,
                         principalTable: "Profiles",
-                        principalColumn: "Username");
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -180,7 +189,7 @@ namespace awme.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     LikedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ProfileUsername = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProfileId = table.Column<int>(type: "int", nullable: false),
                     PostId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -193,32 +202,32 @@ namespace awme.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Likes_Profiles_ProfileUsername",
-                        column: x => x.ProfileUsername,
+                        name: "FK_Likes_Profiles_ProfileId",
+                        column: x => x.ProfileId,
                         principalTable: "Profiles",
-                        principalColumn: "Username");
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Email", "FirstName", "LastName", "PasswordHash", "PasswordSalt", "Role" },
-                values: new object[] { 1, "admin@admin.com", "Admin", "Admin", new byte[] { 208, 34, 163, 227, 219, 55, 206, 110, 65, 182, 90, 187, 95, 43, 81, 145, 60, 240, 84, 126, 233, 195, 200, 190, 17, 178, 213, 192, 19, 17, 185, 139, 225, 46, 69, 53, 123, 231, 131, 223, 5, 8, 86, 232, 84, 117, 46, 112, 131, 199, 251, 170, 10, 150, 14, 114, 154, 161, 127, 33, 25, 107, 9, 95 }, new byte[] { 240, 237, 102, 188, 43, 100, 1, 0, 191, 97, 106, 173, 157, 46, 129, 43, 66, 99, 49, 5, 68, 99, 122, 106, 14, 141, 122, 202, 108, 245, 106, 100, 123, 92, 8, 198, 82, 158, 93, 223, 143, 254, 6, 8, 206, 11, 103, 229, 240, 110, 136, 178, 8, 153, 124, 160, 190, 245, 108, 43, 103, 83, 173, 149, 253, 98, 152, 68, 109, 239, 61, 134, 209, 138, 7, 14, 153, 160, 176, 149, 20, 253, 253, 148, 102, 73, 148, 249, 233, 227, 116, 191, 229, 172, 208, 189, 190, 151, 48, 3, 63, 244, 242, 229, 95, 133, 158, 36, 39, 4, 238, 106, 228, 62, 37, 84, 36, 81, 136, 223, 204, 20, 232, 188, 174, 195, 32, 144 }, "Admin" });
+                values: new object[] { 1, "admin@admin.com", "Admin", "Admin", new byte[] { 164, 38, 234, 210, 198, 157, 210, 159, 106, 42, 211, 116, 202, 52, 173, 166, 235, 11, 175, 197, 224, 222, 186, 112, 160, 46, 204, 27, 129, 111, 38, 231, 237, 191, 139, 240, 38, 206, 147, 220, 139, 230, 35, 93, 219, 48, 251, 74, 216, 31, 37, 23, 197, 90, 218, 191, 78, 66, 78, 43, 253, 56, 201, 206 }, new byte[] { 103, 173, 134, 112, 42, 69, 131, 189, 198, 37, 58, 150, 50, 183, 155, 144, 166, 248, 22, 212, 13, 25, 93, 167, 148, 67, 77, 255, 13, 253, 229, 111, 62, 181, 236, 203, 242, 223, 61, 204, 15, 133, 10, 5, 119, 101, 168, 145, 158, 90, 38, 131, 244, 85, 184, 192, 236, 2, 253, 0, 18, 224, 173, 108, 44, 127, 107, 94, 240, 11, 143, 26, 209, 153, 31, 6, 224, 62, 82, 99, 239, 72, 133, 19, 126, 231, 254, 132, 36, 0, 98, 175, 187, 133, 110, 219, 154, 244, 166, 207, 118, 246, 179, 113, 161, 80, 20, 17, 117, 247, 118, 202, 37, 214, 146, 117, 20, 247, 209, 44, 39, 104, 35, 155, 12, 31, 7, 91 }, "Admin" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Chats_FirstProfileUsername",
+                name: "IX_Chats_FirstProfileId",
                 table: "Chats",
-                column: "FirstProfileUsername",
+                column: "FirstProfileId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Chats_ProfileUsername",
+                name: "IX_Chats_ProfileId",
                 table: "Chats",
-                column: "ProfileUsername");
+                column: "ProfileId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Chats_SecondProfileUsername",
+                name: "IX_Chats_SecondProfileId",
                 table: "Chats",
-                column: "SecondProfileUsername",
+                column: "SecondProfileId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -227,9 +236,9 @@ namespace awme.Migrations
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_ProfileUsername",
+                name: "IX_Comments_ProfileId",
                 table: "Comments",
-                column: "ProfileUsername",
+                column: "ProfileId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -238,9 +247,9 @@ namespace awme.Migrations
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Likes_ProfileUsername",
+                name: "IX_Likes_ProfileId",
                 table: "Likes",
-                column: "ProfileUsername",
+                column: "ProfileId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -249,19 +258,19 @@ namespace awme.Migrations
                 column: "ChatId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_SenderUsername1",
+                name: "IX_Messages_SenderId",
                 table: "Messages",
-                column: "SenderUsername1");
+                column: "SenderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Posts_UserProfileUsername",
+                name: "IX_Posts_ProfileId",
                 table: "Posts",
-                column: "UserProfileUsername");
+                column: "ProfileId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProfileProfile_FollowingUsername",
+                name: "IX_ProfileProfile_FollowingId",
                 table: "ProfileProfile",
-                column: "FollowingUsername");
+                column: "FollowingId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Profiles_UserId",
@@ -302,6 +311,10 @@ namespace awme.Migrations
             migrationBuilder.DropColumn(
                 name: "FirstName",
                 table: "Users");
+
+            migrationBuilder.DropColumn(
+                name: "Gender",
+                table: "Animals");
 
             migrationBuilder.RenameColumn(
                 name: "LastName",

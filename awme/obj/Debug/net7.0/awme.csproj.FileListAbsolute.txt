@@ -78,3 +78,8 @@ D:\projects\dotNet\awme\awme\bin\Debug\net7.0\Microsoft.AspNetCore.Authenticatio
 D:\projects\dotNet\awme\awme\bin\Debug\net7.0\Scrutor.dll
 D:\projects\dotNet\awme\awme\bin\Debug\net7.0\Swashbuckle.AspNetCore.Filters.dll
 D:\projects\dotNet\awme\awme\bin\Debug\net7.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll
+D:\projects\dotNet\awme\awme\bin\Debug\net7.0\Microsoft.AspNetCore.JsonPatch.dll
+D:\projects\dotNet\awme\awme\bin\Debug\net7.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+D:\projects\dotNet\awme\awme\bin\Debug\net7.0\Newtonsoft.Json.dll
+D:\projects\dotNet\awme\awme\bin\Debug\net7.0\Newtonsoft.Json.Bson.dll
+D:\projects\dotNet\awme\awme\bin\Debug\net7.0\Swashbuckle.AspNetCore.Newtonsoft.dll

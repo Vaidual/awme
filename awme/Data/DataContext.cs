@@ -16,7 +16,7 @@ namespace awme.Data
             base.OnModelCreating(modelBuilder);
 
             string password = "string";
-            HashController.CreatePasswordHash(
+            VerificationController.CreatePasswordHash(
                 password,
                 out byte[] passwordHash,
                 out byte[] passwordSalt);

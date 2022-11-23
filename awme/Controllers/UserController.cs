@@ -46,31 +46,26 @@ namespace awme.Controllers
             {
                 return NotFound("The user not exists.");
             }
-            await _userService.UpdateUser(user, userUpdates);
+            await _userService.UpdateUserFields(user, userUpdates);
             return NoContent();
         }
 
-        [HttpDelete(), Authorize(Roles = "User")]
-        public async Task<ActionResult> DeleteWithApproving(UserLoginRequest request)
-        {
-            User? user = await _userService.GetUserByEmail(request.Email);
-            if (user == null)
-            {
-                return NotFound("The user does not exist.");
-            }
-            if (!HashController.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
-            {
-                return StatusCode(403, "Wrong password.");
-            }
-            await _userService.DeleteUser(user.Id);
-            return Ok();
-        }
-
-        [HttpDelete("delete-by-id/{id}"), Authorize(Roles = "Admin")]
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteById(int id)
         {
             await _userService.DeleteUser(id);
             return Ok();
+        }
+
+        [HttpGet("validation"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult<User>> Check(UserLoginRequest request)
+        {
+            User? verifiedUser = await VerificationController.VerifyUserAsync(request, _userService);
+            if (verifiedUser == null)
+            {
+                return Ok(false);
+            }
+            return Ok(true);
         }
     }
 }

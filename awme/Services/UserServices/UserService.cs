@@ -57,7 +57,7 @@ namespace awme.Services.UserServices
             return result;
         }
 
-        public async Task UpdateUser(User user, JsonPatchDocument<User> userUpdates)
+        public async Task UpdateUserFields(User user, JsonPatchDocument<User> userUpdates)
         {
             userUpdates.ApplyTo(user);
             await _context.SaveChangesAsync();

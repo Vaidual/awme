@@ -31,7 +31,7 @@ namespace awme.Controllers
             {
                 return StatusCode(403, $"User '{request.Email}' already exists.");
             }
-            HashController.CreatePasswordHash(
+            VerificationController.CreatePasswordHash(
                 request.Password,
                 out byte[] passwordHash,
                 out byte[] passwordSalt);
@@ -52,17 +52,12 @@ namespace awme.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login(UserLoginRequest request)
         {
-            User? user = await _userService.GetUserByEmail(request.Email);
-            if (user == null)
+            var verifiedUser = await VerificationController.VerifyUserAsync(request, _userService);
+            if (verifiedUser == null)
             {
                 return Unauthorized("Wrong email or password");
             }
-            if (!HashController.VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
-            {
-                return Unauthorized("Wrong email or password");
-            }
-
-            string token = CreateToken(user);
+            string token = CreateToken(verifiedUser);
             return Ok(token);
         }
 

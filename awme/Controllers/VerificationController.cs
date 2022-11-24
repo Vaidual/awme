@@ -9,12 +9,6 @@ namespace awme.Controllers
 {
     public static class VerificationController
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="userService"></param>
-        /// <returns>Returns true if user information correct and false overwise</returns>
         public static async Task<User?> VerifyUserAsync(UserLoginRequest request, IUserService userService)
         {
             User? user = await userService.GetUserByEmail(request.Email);
@@ -22,7 +16,7 @@ namespace awme.Controllers
             {
                 return null;
             }
-            if (VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+            if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
             {
                 return null;
             }

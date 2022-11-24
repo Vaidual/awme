@@ -10,8 +10,10 @@ namespace awme.Services.UserServices
         Task<User?> GetUser(int id);
         Task<User> AddUser(User user);
         Task<bool> CheckIfUserExistsByEmail(string email);
+        Task<bool> CheckIfUserExistsById(int id);
         Task<User?> GetUserByEmail(string email);
         Task UpdateUserFields(User user, JsonPatchDocument<User> userUpdates);
-        Task DeleteUser(int id);
+        Task UpdateUserRole(User user, Role role);
+        Task<bool> DeleteUser(int id);
     }
 }

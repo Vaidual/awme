@@ -6,7 +6,7 @@ namespace awme.Data.Models
     public class Post
     {
         public int Id { get; set; }
-        public string Content { get; set; }
+        public string Content { get; set; } = string.Empty;
         public string Images { get; set; }
         public List<Like> Likes { get; set; }
         public List<Comment> Comments { get; set; }

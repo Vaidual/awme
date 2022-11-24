@@ -1,5 +1,8 @@
 ﻿using awme.Data.Dto.Animal;
 using awme.Data.Models;
+using awme.Services.AnimalServices;
+using awme.Services.AnimalTypeServices;
+using awme.Services.UserServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,80 +15,93 @@ namespace awme.Controllers
     [Authorize]
     public class AnimalController : ControllerBase
     {
-        private readonly DataContext _context;
-        public AnimalController(DataContext context)
+        private readonly IAnimalService _animalService;
+        private readonly IUserService _userService;
+        private readonly IAnimalTypeService _animalTypeService;
+
+        public AnimalController(IAnimalService animalService, IUserService userService, IAnimalTypeService animalTypeService)
         {
-            _context = context;
+            _animalService = animalService;
+            _userService = userService;
+            _animalTypeService = animalTypeService;
         }
 
         [HttpGet()]
         public async Task<ActionResult<List<Animal>>> GetAnimals()
         {
-            List<Animal> animals = _context.Animals.ToList();
+            List<Animal> animals = await _animalService.GetAnimals();
             return Ok(animals);
         }
 
-        [HttpGet("user-animals/{id}")]
-        public async Task<ActionResult<List<Animal>>> GetUserAnimals(int id)
+        [HttpGet("user-animals/{userId}")]
+        public async Task<ActionResult<List<Animal?>>> GetUserAnimals(int userId)
         {
-            User? user = await _context.Users.FirstOrDefaultAsync(el => el.Id == id);
-            if (user == null)
+            if (!await _userService.CheckIfUserExistsById(userId))
             {
-                return BadRequest("The user does not exist.");
+                return NotFound("User does not exist.");
             }
-            return Ok(user.Animals);
+            List<Animal> animals = await _animalService.GetUserAnimals(userId);
+            return Ok(animals);
         }
 
-        [HttpGet("get-by-id/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<Animal>> GetAnimal(int id)
         {
-            Animal? animal = await _context.Animals.FirstOrDefaultAsync(el => el.Id == id);
+            Animal? animal = await _animalService.GetAnimal(id);
             if (animal == null)
             {
-                return BadRequest("The user does not exist.");
+                return NotFound("The animal does not exist.");
             }
             return Ok(animal);
         }
 
-        [HttpPost("add")]
+        [HttpPost()]
         public async Task<ActionResult<Animal>> Add(AnimalAddRequest request)
         {
-            User? user = await _context.Users.FirstOrDefaultAsync(el => el.Id == request.UserId);
+            User? user = await _userService.GetUser(request.UserId);
             if (user == null)
             {
-                return BadRequest("The user does not exist.");
+                return NotFound("The user does not exist.");
             }
-            AnimalType? type = await _context.AnimalTypes.FirstOrDefaultAsync(el => el.Id == request.TypeId);
+            AnimalType? type = await _animalTypeService.GetType(request.TypeId);
             if (type == null)
             {
-                return BadRequest("The type does not exist.");
+                return NotFound("The type does not exist.");
             }
             Animal animal = new()
             {
                 Name = request.Name,
-                Description = request.Description,
                 Age = request.Age,
                 Type = type,
                 AvatarImage = request.AvatarImage,
                 User = user,
                 Gender = request.Gender,
             };
-            _context.Animals.Add(animal);
-            await _context.SaveChangesAsync();
-            return Ok(animal); 
+            if (request.Description != null) animal.Description = request.Description;
+            await _animalService.AddAnimal(animal);
+            return CreatedAtAction(nameof(GetAnimal), new { id = animal.Id }, animal);
         }
 
-        [HttpDelete("delete-by-id/{id}")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteById(int id)
         {
-            Animal? animal = await _context.Animals.FirstOrDefaultAsync(el => el.Id == id);
+            if (!await _animalService.DeleteAnimal(id))
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<Animal>> Put(int id, AnimalUpdateRequest request)
+        {
+            Animal? animal = await _animalService.GetAnimal(id);
             if (animal == null)
             {
-                return BadRequest("The animal does not exist.");
+                return NotFound("The animal does not exist.");
             }
-            _context.Remove(animal);
-            await _context.SaveChangesAsync();
-            return Ok();
+            await _animalService.UpdateAnimal(animal, request);
+            return animal;
         }
     }
 }

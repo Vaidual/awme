@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace awme.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
@@ -27,7 +29,7 @@ namespace awme.Controllers
             return Ok(users);
         }
 
-        [HttpGet("{id}"), Authorize(Roles = "Admin")]
+        [HttpGet("{id}", Name = "GetUserById")]
         public async Task<ActionResult<User>> GetById(int id)
         {
             User? user = await _userService.GetUser(id);
@@ -38,34 +40,45 @@ namespace awme.Controllers
             return Ok(user);
         }
 
-        [HttpPatch("{id}"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Patch(int id, JsonPatchDocument<User> userUpdates)
+        [HttpPatch("{id}/{role}"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Patch(int id, Role role)
         {
             User? user = await _userService.GetUser(id);
             if (user == null)
             {
                 return NotFound("The user not exists.");
             }
-            await _userService.UpdateUserFields(user, userUpdates);
+            if (id.ToString() == User.FindFirstValue("Id"))
+            {
+                return BadRequest("You cannot change own role");
+            }
+            await _userService.UpdateUserRole(user, role);
             return NoContent();
         }
 
-        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteById(int id)
         {
-            await _userService.DeleteUser(id);
-            return Ok();
+            if (!await _userService.DeleteUser(id))
+            {
+                return NotFound();
+            }
+            return NoContent();
         }
 
-        [HttpGet("validation"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<User>> Check(UserLoginRequest request)
+        [HttpDelete()]
+        public async Task<ActionResult> Delete(UserLoginRequest request)
         {
             User? verifiedUser = await VerificationController.VerifyUserAsync(request, _userService);
             if (verifiedUser == null)
             {
-                return Ok(false);
+                return Unauthorized("Wrong email or password");
             }
-            return Ok(true);
+            if (!await _userService.DeleteUser(verifiedUser.Id))
+                {
+                    return NotFound();
+                }
+            return NoContent();
         }
     }
 }

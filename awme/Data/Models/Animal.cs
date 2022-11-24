@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace awme.Data.Models
 {
@@ -8,7 +9,7 @@ namespace awme.Data.Models
         public string Name { get; set; }
         public int? Age { get; set; }
         public Gender? Gender { get; set; }
-        public string? Description { get; set; }
+        public string Description { get; set; } = string.Empty;
         public string? AvatarImage { get; set; }
         [JsonIgnore]
         public AnimalType Type { get; set; }

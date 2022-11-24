@@ -1,4 +1,7 @@
-﻿namespace awme.Data.Models
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+namespace awme.Data.Models
 {
     public class User
     {
@@ -8,7 +11,7 @@
         public string Email { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
-        public string Role { get; set; }
+        public Role Role { get; set; } = Role.User;
         public List<Animal> Animals { get; set; }
         public Profile Profile { get; set; }
     }

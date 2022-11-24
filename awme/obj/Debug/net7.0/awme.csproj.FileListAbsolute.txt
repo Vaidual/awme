@@ -85,3 +85,4 @@ D:\projects\dotNet\awme\awme\bin\Debug\net7.0\Newtonsoft.Json.Bson.dll
 D:\projects\dotNet\awme\awme\bin\Debug\net7.0\Swashbuckle.AspNetCore.Newtonsoft.dll
 D:\projects\dotNet\awme\awme\bin\Debug\net7.0\AutoMapper.dll
 D:\projects\dotNet\awme\awme\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+D:\projects\dotNet\awme\awme\bin\Debug\net7.0\SimplePatch.dll

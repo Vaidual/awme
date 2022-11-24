@@ -32,14 +32,22 @@ namespace awme.Services.UserServices
             return result;
         }
 
-        public async Task DeleteUser(int id)
+        public async Task<bool> CheckIfUserExistsById(int id)
         {
-            var result = await _context.Users.FirstOrDefaultAsync(el => el.Id == id);
+            var result = await _context.Users.AnyAsync(u => u.Id == id);
+            return result;
+        }
+
+        public async Task<bool> DeleteUser(int id)
+        {
+            var result = await GetUser(id);
             if (result != null)
             {
                 _context.Remove(result);
                 await _context.SaveChangesAsync();
+                return true;
             }
+            return false;
         }
 
         public async Task<User?> GetUser(int id)
@@ -63,6 +71,12 @@ namespace awme.Services.UserServices
         public async Task UpdateUserFields(User user, JsonPatchDocument<User> userUpdates)
         {
             userUpdates.ApplyTo(user);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateUserRole(User user, Role role)
+        {
+            user.Role = role;
             await _context.SaveChangesAsync();
         }
     }

@@ -29,7 +29,8 @@ namespace awme.Data
                     Email = "admin@admin.com",
                     PasswordHash = passwordHash,
                     PasswordSalt = passwordSalt,
-                    Role = "Admin"
+                    Role = Role.Admin
+                    
                 });
 
             modelBuilder.Entity<Chat>().HasOne(c => c.FirstProfile).WithOne()

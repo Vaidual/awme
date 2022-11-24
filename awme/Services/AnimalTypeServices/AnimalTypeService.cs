@@ -2,7 +2,7 @@
 using awme.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace awme.Services.AnimalTypeService
+namespace awme.Services.AnimalTypeServices
 {
     public class AnimalTypeService : IAnimalTypeService
     {
@@ -27,14 +27,16 @@ namespace awme.Services.AnimalTypeService
             return await _context.AnimalTypes.AnyAsync(el => el.TypeName == type);
         }
 
-        public async Task DeleteType(int id)
+        public async Task<bool> DeleteType(int id)
         {
             var result = await GetType(id);
             if (result != null)
             {
                 _context.Remove(result);
                 await _context.SaveChangesAsync();
+                return true;
             }
+            return false;
         }
 
         public async Task<AnimalType?> GetType(int id)

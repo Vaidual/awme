@@ -1,11 +1,15 @@
 global using awme.Data;
-using awme.Services.AnimalTypeService;
+using awme.Data.Dto.Profile;
+using awme.Services.AnimalServices;
+using awme.Services.AnimalTypeServices;
+using awme.Services.ProfileSevices;
 using awme.Services.UserServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using SimplePatch;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
@@ -22,12 +26,18 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAnimalTypeService, AnimalTypeService>();
+builder.Services.AddScoped<IAnimalService, AnimalService>();
+builder.Services.AddScoped<IProfileSevice, ProfileSevice>();
 
+DeltaConfig.Init(cfg => {
+    cfg.AddEntity<ProfileUpdateRequest>();
+});
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options => {
+    options.UseInlineDefinitionsForEnums();
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
         Description = "Standard authorization header using Bearer scheme (\"bearer {token}\")",

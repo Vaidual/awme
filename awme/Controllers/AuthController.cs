@@ -29,7 +29,7 @@ namespace awme.Controllers
         {
             if (await _userService.CheckIfUserExistsByEmail(request.Email))
             {
-                return StatusCode(403, $"User '{request.Email}' already exists.");
+                return StatusCode(409, $"This email is already taken.");
             }
             VerificationController.CreatePasswordHash(
                 request.Password,
@@ -43,10 +43,10 @@ namespace awme.Controllers
                 Email = request.Email,
                 PasswordSalt = passwordSalt,
                 PasswordHash = passwordHash,
-                Role = "User"
+                Role = Role.User
             };
-            await _userService.AddUser(user);
-            return CreatedAtAction("GetUser", new { id = user.Id}, user);
+            user = await _userService.AddUser(user);
+            return CreatedAtRoute("GetUserById", new { id = user.Id}, user);
         }
 
         [HttpPost("login")]
@@ -65,8 +65,8 @@ namespace awme.Controllers
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Role, user.Role)
+                new Claim("Id", user.Id.ToString()),
+                new Claim(ClaimTypes.Role, user.Role.ToString())
             };
             var key= new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                 _configuration["JwtConfig:Secret"]!));

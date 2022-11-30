@@ -86,3 +86,8 @@ D:\projects\dotNet\awme\awme\bin\Debug\net7.0\Swashbuckle.AspNetCore.Newtonsoft.
 D:\projects\dotNet\awme\awme\bin\Debug\net7.0\AutoMapper.dll
 D:\projects\dotNet\awme\awme\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 D:\projects\dotNet\awme\awme\bin\Debug\net7.0\SimplePatch.dll
+D:\projects\dotNet\awme\awme\bin\Debug\net7.0\Simple.HttpPatch.dll
+D:\projects\dotNet\awme\awme\bin\Debug\net7.0\MQTTnet.dll
+D:\projects\dotNet\awme\awme\bin\Debug\net7.0\MQTTnet.Extensions.ManagedClient.dll
+D:\projects\dotNet\awme\awme\bin\Debug\net7.0\Serilog.dll
+D:\projects\dotNet\awme\awme\bin\Debug\net7.0\Serilog.Sinks.Console.dll

@@ -13,6 +13,7 @@ namespace awme.Data.Models
         public byte[] PasswordSalt { get; set; }
         public Role Role { get; set; } = Role.User;
         public List<Animal> Animals { get; set; }
+        public List<Collar> Collars { get; set; }
         public Profile Profile { get; set; }
     }
 }

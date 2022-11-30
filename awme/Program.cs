@@ -1,4 +1,5 @@
 global using awme.Data;
+using awme.Controllers;
 using awme.Data.Dto.Profile;
 using awme.Services.AnimalServices;
 using awme.Services.AnimalTypeServices;
@@ -29,9 +30,12 @@ builder.Services.AddScoped<IAnimalTypeService, AnimalTypeService>();
 builder.Services.AddScoped<IAnimalService, AnimalService>();
 builder.Services.AddScoped<IProfileSevice, ProfileSevice>();
 
-DeltaConfig.Init(cfg => {
-    cfg.AddEntity<ProfileUpdateRequest>();
-});
+//await AnimalDataController.Handle_Received_Application_Message();
+builder.Services.AddSingleton(new AnimalDataController().Handle_Received_Application_Message());
+
+//DeltaConfig.Init(cfg => {
+//    cfg.AddEntity<ProfileUpdateRequest>();
+//});
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

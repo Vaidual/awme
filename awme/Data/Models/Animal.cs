@@ -17,5 +17,7 @@ namespace awme.Data.Models
         [JsonIgnore]
         public User User { get; set; }
         public int UserId { get; set; }
+        public Collar Collar { get; set; }
+        public string CollarId { get; set; }
     }
 }

@@ -43,6 +43,9 @@ namespace awme.Data
                 .HasForeignKey<Comment>(a => a.ProfileId).OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Like>().HasOne(a => a.Profile).WithOne()
                 .HasForeignKey<Like>(a => a.ProfileId).OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Like>().HasOne(a => a.Profile).WithOne()
+                .HasForeignKey<Like>(a => a.ProfileId).OnDelete(DeleteBehavior.NoAction);
         }
 
         public DbSet<AnimalType> AnimalTypes { get; set; }
@@ -54,5 +57,7 @@ namespace awme.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Like> Likes { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<Collar> Collars { get; set; }
+        public DbSet<Activity> Activities { get; set; }
     }
 }

@@ -2,7 +2,9 @@
 using awme.Data.Models;
 using awme.Services.AnimalServices;
 using awme.Services.AnimalTypeServices;
+using awme.Services.CollarServices;
 using awme.Services.UserServices;
+using Azure.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +20,18 @@ namespace awme.Controllers
         private readonly IAnimalService _animalService;
         private readonly IUserService _userService;
         private readonly IAnimalTypeService _animalTypeService;
+        private readonly ICollarService _collarService;
 
-        public AnimalController(IAnimalService animalService, IUserService userService, IAnimalTypeService animalTypeService)
+        public AnimalController(
+            IAnimalService animalService, 
+            IUserService userService, 
+            IAnimalTypeService animalTypeService,
+            ICollarService collarService)
         {
             _animalService = animalService;
             _userService = userService;
             _animalTypeService = animalTypeService;
+            this._collarService = collarService;
         }
 
         [HttpGet()]
@@ -101,6 +109,32 @@ namespace awme.Controllers
                 return NotFound("The animal does not exist.");
             }
             await _animalService.UpdateAnimal(animal, request);
+            return animal;
+        }
+
+
+        [HttpPatch()]
+        public async Task<ActionResult<Animal>> PatchCollar(int animalId, string? collarId)
+        {
+            Animal? animal = await _animalService.GetAnimal(animalId);
+            if (animal == null)
+            {
+                return NotFound("The animal does not exist.");
+            }
+            if (collarId != null && !await _userService.CheckIfUserHaveCollar(animal.UserId, collarId))
+            {
+                return BadRequest("User does not have collar");
+            }
+            Collar? collar = null;
+            if (collarId != null)
+            {
+                collar = await _collarService.GetCollar(collarId);
+                if (collar == null)
+                {
+                    return NotFound("The collar does not exist.");
+                }
+            }
+            await _animalService.PatchCollar(animal, collar);
             return animal;
         }
     }

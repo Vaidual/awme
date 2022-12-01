@@ -1,14 +1,10 @@
-﻿using awme.Data.Dto.Animal;
-using awme.Data.Dto.Profile;
+﻿using awme.Data.Dto.Profile;
 using awme.Data.Models;
-using awme.Services.AnimalServices;
-using awme.Services.AnimalTypeServices;
+using awme.Services.PostServices;
 using awme.Services.ProfileSevices;
 using awme.Services.UserServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Data;
 
 namespace awme.Controllers
 {
@@ -19,11 +15,13 @@ namespace awme.Controllers
     {
         private readonly IProfileSevice _profileSevice;
         private readonly IUserService _userService;
+        private readonly IPostService _postService;
 
-        public ProfileController(IProfileSevice profileSevice, IUserService userService)
+        public ProfileController(IProfileSevice profileSevice, IUserService userService, IPostService postService)
         {
             _profileSevice = profileSevice;
             _userService = userService;
+            this._postService = postService;
         }
 
         [HttpGet()]
@@ -31,6 +29,13 @@ namespace awme.Controllers
         {
             List<Profile> profiles = await _profileSevice.GetProfiles();
             return Ok(profiles);
+        }
+
+        [HttpGet("{id}/posts")]
+        public async Task<ActionResult<List<Post>>> GetProfilePosts(int id)
+        {
+            List<Post> posts = await _postService.GetProfilePosts(id);
+            return Ok(posts);
         }
 
         [HttpGet("{id}")]
@@ -51,6 +56,10 @@ namespace awme.Controllers
             if (user == null)
             {
                 return NotFound("The user does not exist.");
+            }
+            if (user.Profile != null)
+            {
+                return BadRequest("The user already has profile.");
             }
             if (await _profileSevice.CheckIfUsernameIsTaken(request.Username))
             {

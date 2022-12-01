@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using awme.Data;
 
@@ -11,9 +12,11 @@ using awme.Data;
 namespace awme.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221130190550_NullableAnimalCollar")]
+    partial class NullableAnimalCollar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -369,8 +372,8 @@ namespace awme.Migrations
                             Email = "admin@admin.com",
                             FirstName = "Admin",
                             LastName = "Admin",
-                            PasswordHash = new byte[] { 31, 87, 185, 147, 246, 62, 239, 8, 150, 89, 28, 85, 206, 178, 94, 138, 106, 155, 84, 227, 1, 127, 82, 136, 34, 152, 36, 152, 135, 147, 201, 47, 92, 121, 139, 5, 247, 255, 199, 218, 114, 95, 168, 10, 80, 224, 169, 87, 39, 205, 55, 167, 41, 15, 59, 148, 48, 52, 22, 36, 6, 103, 54, 142 },
-                            PasswordSalt = new byte[] { 8, 69, 151, 171, 67, 189, 143, 120, 135, 236, 43, 202, 143, 132, 103, 202, 166, 170, 135, 223, 173, 147, 94, 244, 198, 191, 98, 202, 109, 89, 192, 188, 35, 45, 147, 243, 26, 247, 175, 98, 12, 223, 253, 10, 206, 11, 217, 69, 233, 169, 85, 52, 168, 97, 79, 102, 126, 47, 241, 109, 121, 134, 212, 196, 104, 34, 155, 166, 120, 76, 116, 117, 48, 137, 30, 101, 186, 113, 181, 193, 202, 16, 26, 4, 84, 91, 197, 224, 183, 251, 132, 62, 40, 236, 168, 105, 70, 174, 86, 165, 129, 129, 80, 175, 200, 24, 29, 32, 223, 206, 103, 131, 201, 53, 145, 94, 219, 36, 205, 209, 75, 253, 19, 157, 108, 93, 179, 162 },
+                            PasswordHash = new byte[] { 61, 229, 166, 172, 151, 182, 154, 31, 203, 111, 121, 104, 158, 122, 157, 233, 248, 126, 150, 80, 169, 193, 17, 167, 57, 99, 22, 158, 59, 196, 216, 42, 25, 54, 63, 66, 70, 60, 172, 108, 167, 47, 244, 177, 157, 177, 203, 68, 222, 66, 84, 126, 154, 69, 150, 141, 159, 184, 37, 127, 60, 219, 160, 237 },
+                            PasswordSalt = new byte[] { 231, 220, 15, 116, 27, 59, 43, 134, 10, 33, 21, 143, 26, 21, 24, 36, 51, 180, 210, 65, 211, 200, 146, 160, 50, 132, 36, 136, 35, 64, 127, 77, 12, 53, 186, 13, 170, 142, 107, 3, 4, 208, 136, 68, 27, 77, 156, 75, 103, 228, 34, 188, 170, 19, 145, 76, 113, 74, 108, 184, 70, 74, 142, 156, 1, 201, 40, 12, 90, 235, 170, 160, 144, 28, 133, 126, 37, 164, 120, 101, 92, 85, 243, 158, 177, 68, 134, 189, 163, 184, 134, 71, 9, 235, 125, 240, 100, 236, 18, 158, 65, 238, 163, 230, 22, 199, 31, 67, 109, 100, 216, 221, 117, 200, 184, 148, 67, 103, 155, 180, 123, 123, 234, 13, 91, 222, 201, 93 },
                             Role = 1
                         });
                 });
@@ -451,11 +454,9 @@ namespace awme.Migrations
 
             modelBuilder.Entity("awme.Data.Models.Collar", b =>
                 {
-                    b.HasOne("awme.Data.Models.User", "User")
+                    b.HasOne("awme.Data.Models.User", null)
                         .WithMany("Collars")
                         .HasForeignKey("UserId");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("awme.Data.Models.Comment", b =>

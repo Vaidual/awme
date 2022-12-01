@@ -38,6 +38,20 @@ namespace awme.Services.UserServices
             return result;
         }
 
+        public async Task<bool> CheckIfUserHaveCollar(int userId, string collarId)
+        {
+            var result = await _context.Users.Where(u => u.Id == userId).Include(u => u.Collars).FirstOrDefaultAsync();
+            return result!.Collars.Any(c => c.Id == collarId);
+        }
+
+        public async Task<User> AddCollar(User user, Collar collar)
+        {
+            collar.User = user;
+            collar.InUse = true;
+            await _context.SaveChangesAsync();
+            return await GetUser(user.Id);
+        }
+
         public async Task<bool> DeleteUser(int id)
         {
             var result = await GetUser(id);
@@ -52,7 +66,7 @@ namespace awme.Services.UserServices
 
         public async Task<User?> GetUser(int id)
         {
-            var result = await _context.Users.FirstOrDefaultAsync(el => el.Id == id);
+            var result = await _context.Users.Include(u => u.Profile).FirstOrDefaultAsync(el => el.Id == id);
             return result;
         }
 

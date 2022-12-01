@@ -12,5 +12,6 @@ namespace awme.Services.AnimalServices
         Task<Animal> AddAnimal(Animal animal);
         Task<bool> DeleteAnimal(int id);
         Task<Animal> UpdateAnimal(Animal animal, AnimalUpdateRequest update);
+        Task<Animal> PatchCollar(Animal animal, Collar? collar);
     }
 }

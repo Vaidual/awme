@@ -15,11 +15,9 @@ namespace awme.Controllers
     public class AnimalTypeController : Controller
     {
         private readonly IAnimalTypeService _animalTypeService;
-        private readonly IConfiguration _configuration;
-        public AnimalTypeController(IAnimalTypeService animalTypeService, IConfiguration configuration)
+        public AnimalTypeController(IAnimalTypeService animalTypeService)
         {
             _animalTypeService = animalTypeService;
-            _configuration = configuration;
         }
 
         [HttpGet()]
@@ -35,7 +33,7 @@ namespace awme.Controllers
             AnimalType? type = await _animalTypeService.GetType(id);
             if (type == null)
             {
-                return NotFound("Animal type does not exist/");
+                return NotFound("Animal type does not exist.");
             }
             return Ok(type);
         }
@@ -51,7 +49,7 @@ namespace awme.Controllers
             return CreatedAtAction(nameof(Get), new { id = animalType.Id }, animalType);
         }
 
-        [HttpDelete("delete-by-id/{id}"), Authorize(Roles = "Admin")]
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteById(int id)
         {
             if (!await _animalTypeService.DeleteType(id))

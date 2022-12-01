@@ -8,12 +8,23 @@ using Newtonsoft.Json;
 using Serilog;
 using System.Text;
 using MQTTnet.Server;
+using awme.Services.AnimalActivityServices;
+using awme.Data.Dto.AnimalActivity;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace awme.Controllers
 {
     public class AnimalDataController
     {
-        public async Task Handle_Received_Application_Message()
+        private readonly IAnimalActivityService? _animalActivityService;
+
+        public AnimalDataController(IAnimalActivityService? animalActivityService)
+        {
+            this._animalActivityService = animalActivityService;
+        }
+
+        public async void Handle_Received_Application_Message()
         {
 
             var mqttFactory = new MqttFactory();
@@ -31,11 +42,17 @@ namespace awme.Controllers
                 // Setup message handling before connecting so that queued messages
                 // are also handled properly. When there is no event handler attached all
                 // received messages get lost.
-                mqttClient.ApplicationMessageReceivedAsync += e =>
+                mqttClient.ApplicationMessageReceivedAsync += async e =>
                 {
                     Console.WriteLine("Received application message.");
-                    var a = Parse(e.ApplicationMessage.Payload);
-                    return Task.CompletedTask;
+                    var data = Parse(e.ApplicationMessage.Payload);
+                    AnimalActivityAddRequest activity = new AnimalActivityAddRequest
+                    {
+                        CollarId = data["deviceId"].ToString()!,
+                        isActive = bool.Parse(data["isMoving"].ToString()!),
+                        Time = DateTime.Now
+                    };
+                    await _animalActivityService!.AddActivity(activity);
                 };
 
                 var a = await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
@@ -58,7 +75,7 @@ namespace awme.Controllers
                     .WithTopicFilter(
                         f =>
                         {
-                            f.WithTopic("awme/temperature");
+                            f.WithTopic("awme/move");
                         })
                     .Build();
 

@@ -1,8 +1,11 @@
 global using awme.Data;
 using awme.Controllers;
 using awme.Data.Dto.Profile;
+using awme.Services.AnimalActivityServices;
 using awme.Services.AnimalServices;
 using awme.Services.AnimalTypeServices;
+using awme.Services.CollarServices;
+using awme.Services.PostServices;
 using awme.Services.ProfileSevices;
 using awme.Services.UserServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -29,9 +32,11 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAnimalTypeService, AnimalTypeService>();
 builder.Services.AddScoped<IAnimalService, AnimalService>();
 builder.Services.AddScoped<IProfileSevice, ProfileSevice>();
+builder.Services.AddScoped<ICollarService, CollarService>();
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IAnimalActivityService, AnimalActivityService>();
 
-//await AnimalDataController.Handle_Received_Application_Message();
-builder.Services.AddSingleton(new AnimalDataController().Handle_Received_Application_Message());
+//builder.Services.AddSingleton(new AnimalDataController().Handle_Received_Application_Message());
 
 //DeltaConfig.Init(cfg => {
 //    cfg.AddEntity<ProfileUpdateRequest>();
@@ -65,6 +70,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 });
 
 var app = builder.Build();
+
+var dataContoller = new AnimalDataController(app.Services.CreateScope().ServiceProvider.GetService<IAnimalActivityService>());
+dataContoller.Handle_Received_Application_Message();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

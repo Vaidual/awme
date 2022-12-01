@@ -1,5 +1,6 @@
 ﻿using awme.Data.Dto.User;
 using awme.Data.Models;
+using awme.Services.CollarServices;
 using awme.Services.UserServices;
 using Azure;
 using Azure.Core;
@@ -17,9 +18,12 @@ namespace awme.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly ICollarService _collarService;
+
+        public UserController(IUserService userService, ICollarService collarService)
         {
             _userService = userService;
+            this._collarService = collarService;
         }
 
         [HttpGet(), Authorize(Roles = "Admin")]
@@ -78,6 +82,27 @@ namespace awme.Controllers
                 {
                     return NotFound();
                 }
+            return NoContent();
+        }
+
+        [HttpPatch("/collar/{userId}/{collarId}")]
+        public async Task<ActionResult> AddCollar(int userId, string collarId)
+        {
+            User? user = await _userService.GetUser(userId);
+            if (user == null)
+            {
+                return NotFound("The user not exists.");
+            }
+            Collar? collar = await _collarService.GetCollar(collarId);
+            if (collar == null)
+            {
+                return NotFound("The collar not exists.");
+            }
+            if (collar.InUse)
+            {
+                return BadRequest("Collar aldready in use.");
+            }
+            await _userService.AddCollar(user, collar);
             return NoContent();
         }
     }

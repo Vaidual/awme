@@ -42,7 +42,7 @@ namespace awme.Services.ProfileSevices
             {
                 return false;
             }
-            _context.Remove(result);
+            _context.Profiles.Remove(result);
             await _context.SaveChangesAsync();
             return true;
         }

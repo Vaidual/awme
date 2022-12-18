@@ -43,6 +43,14 @@ builder.Services.AddScoped<IAnimalActivityService, AnimalActivityService>();
 //});
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
+builder.Services.AddCors(option =>
+{
+    option.AddDefaultPolicy(builder => 
+    { 
+        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyHeader();
+    });
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options => {
@@ -82,6 +90,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthentication();
 

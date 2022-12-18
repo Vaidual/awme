@@ -46,7 +46,8 @@ namespace awme.Controllers
                 Role = Role.User
             };
             user = await _userService.AddUser(user);
-            return CreatedAtRoute("GetUserById", new { id = user.Id}, user);
+            string token = CreateToken(user);
+            return CreatedAtRoute("GetUserById", new { id = user.Id}, new { user, token});
         }
 
         [HttpPost("login")]

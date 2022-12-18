@@ -91,3 +91,7 @@ D:\projects\dotNet\awme\awme\bin\Debug\net7.0\MQTTnet.dll
 D:\projects\dotNet\awme\awme\bin\Debug\net7.0\MQTTnet.Extensions.ManagedClient.dll
 D:\projects\dotNet\awme\awme\bin\Debug\net7.0\Serilog.dll
 D:\projects\dotNet\awme\awme\bin\Debug\net7.0\Serilog.Sinks.Console.dll
+D:\projects\dotNet\awme\awme\bin\Debug\net7.0\System.Web.Cors.dll
+D:\projects\dotNet\awme\awme\bin\Debug\net7.0\System.Net.Http.Formatting.dll
+D:\projects\dotNet\awme\awme\bin\Debug\net7.0\System.Web.Http.dll
+D:\projects\dotNet\awme\awme\bin\Debug\net7.0\System.Web.Http.Cors.dll

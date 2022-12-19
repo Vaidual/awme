@@ -1,6 +1,8 @@
 ﻿using awme.Data.Dto.User;
 using awme.Data.Models;
 using awme.Services.UserServices;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -61,15 +63,7 @@ namespace awme.Controllers
             }
             string token = CreateToken(verifiedUser);
 
-            var cookiesOptions = new CookieOptions
-            {
-                HttpOnly = true,
-                Expires = DateTime.UtcNow.AddMinutes(2),
-                SameSite = SameSiteMode.None,
-                Secure = true,
-            };
-            Response.Cookies.Append("refreshToken", token, cookiesOptions);
-            return Ok(token);
+            return Ok();
         }
 
         private string CreateToken(User user)
@@ -95,6 +89,16 @@ namespace awme.Controllers
                 );
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            HttpContext.Response.Cookies.Append("accessToken", jwt,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Expires = DateTime.UtcNow.AddMinutes(2),
+                    SameSite = SameSiteMode.None,
+                    Secure = true,
+                    IsEssential = true
+                });
             return jwt;
         }
     }

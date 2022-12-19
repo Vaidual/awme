@@ -13,7 +13,7 @@ using System.Text;
 namespace awme.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     public class AuthController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -59,6 +59,15 @@ namespace awme.Controllers
                 return Unauthorized("Wrong email or password");
             }
             string token = CreateToken(verifiedUser);
+
+            var cookiesOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.UtcNow.AddMinutes(2),
+                SameSite = SameSiteMode.None,
+                Secure = true,
+            };
+            Response.Cookies.Append("refreshToken", token, cookiesOptions);
             return Ok(token);
         }
 

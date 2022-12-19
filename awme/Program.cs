@@ -43,11 +43,16 @@ builder.Services.AddScoped<IAnimalActivityService, AnimalActivityService>();
 //});
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
-builder.Services.AddCors(option =>
+builder.Services.AddCors(options =>
 {
-    option.AddDefaultPolicy(builder => 
-    { 
-        builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyHeader();
+    options.AddPolicy("AwmePolicy", builder =>
+    {
+        builder
+            //.AllowAnyOrigin()
+            .WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
@@ -91,7 +96,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors();
+app.UseCors("AwmePolicy");
 
 app.UseAuthentication();
 

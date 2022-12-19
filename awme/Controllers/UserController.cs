@@ -13,12 +13,13 @@ using System.Security.Claims;
 namespace awme.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/users")]
     [Authorize]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
         private readonly ICollarService _collarService;
+
 
         public UserController(IUserService userService, ICollarService collarService)
         {
@@ -33,10 +34,26 @@ namespace awme.Controllers
             return Ok(users);
         }
 
-        [HttpGet("{id}", Name = "GetUserById")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetById(int id)
         {
             User? user = await _userService.GetUser(id);
+            if (user == null)
+            {
+                return NotFound("The user does not exist.");
+            }
+            return Ok(user);
+        }
+
+        [HttpGet("me")]
+        public async Task<ActionResult<User>> GetMe()
+        {
+            string? id = User.FindFirstValue("Id");
+            if (id == null)
+            {
+                return Unauthorized("You must authorize first.");
+            }
+            User? user = await _userService.GetUser(int.Parse(id));
             if (user == null)
             {
                 return NotFound("The user does not exist.");

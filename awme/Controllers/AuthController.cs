@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -76,8 +77,12 @@ namespace awme.Controllers
             List<Claim> claims = new List<Claim>
             {
                 new Claim("Id", user.Id.ToString()),
-                new Claim(ClaimTypes.Role, user.Role.ToString())
             };
+            var roles = user.Role.ToString().Split(',');
+            foreach (string role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
             var key= new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                 _configuration["JwtConfig:Secret"]!));
 

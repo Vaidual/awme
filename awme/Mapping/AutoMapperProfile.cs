@@ -2,6 +2,7 @@
 using awme.Data.Dto.AnimalActivity;
 using awme.Data.Dto.Post;
 using awme.Data.Dto.Profile;
+using awme.Data.Dto.User;
 using awme.Data.Models;
 
 namespace awme.Mapping
@@ -16,6 +17,7 @@ namespace awme.Mapping
             CreateMap<AnimalActivityAddRequest, Activity>();
             CreateMap<PostAddRequest, Post>();
             CreateMap<PostUpdateRequest, Post>();
+            CreateMap<User, UserGetRequest>();
         }
     }
 }

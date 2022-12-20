@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using awme.Data.Models;
 using Microsoft.AspNetCore.JsonPatch;
+using awme.Data.Dto.User;
 
 namespace awme.Services.UserServices
 {
     public interface IUserService
     {
         Task<User> AddCollar(User user, Collar collar);
-        Task<List<User>> GetUsers();
+        Task<List<UserGetRequest>> GetUsers();
         Task<User?> GetUser(int id);
         Task<User> AddUser(User user);
         Task<bool> CheckIfUserExistsByEmail(string email);

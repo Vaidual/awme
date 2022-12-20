@@ -13,6 +13,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace awme.Controllers
 {
@@ -67,6 +68,24 @@ namespace awme.Controllers
             return Ok(token);
         }
 
+        [HttpDelete("logout")]
+        [Authorize]
+        public ActionResult Logout()
+        {
+            Console.Write(111);
+            HttpContext.Response.Cookies.Delete("accessToken",
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    SameSite = SameSiteMode.None,
+                    Secure = true,
+                    IsEssential = true
+                }
+            );
+            return Ok();
+        }
+
+
         private string CreateToken(User user)
         {
             List<Claim> claims = new List<Claim>
@@ -86,7 +105,7 @@ namespace awme.Controllers
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(0.2),
+                expires: DateTime.UtcNow.AddMinutes(50),
                 signingCredentials: cred
                 );
 
@@ -96,7 +115,7 @@ namespace awme.Controllers
                 new CookieOptions
                 {
                     HttpOnly = true,
-                    Expires = DateTime.UtcNow.AddMinutes(5),
+                    Expires = DateTime.UtcNow.AddMinutes(50),
                     SameSite = SameSiteMode.None,
                     Secure = true,
                     IsEssential = true

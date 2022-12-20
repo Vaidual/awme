@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using awme.Data.Dto.User;
 using awme.Data.Models;
 using awme.Migrations;
 using Azure.Core;
@@ -76,9 +77,9 @@ namespace awme.Services.UserServices
             return result;
         }
 
-        public async Task<List<User>> GetUsers()
+        public async Task<List<UserGetRequest>> GetUsers()
         {
-            var result = await _context.Users.ToListAsync();
+            var result = _mapper.Map(await _context.Users.Include(u => u.Animals).Include(u => u.Profile).Include(u => u.Collars).ToListAsync(), new List<UserGetRequest>());
             return result;
         }
 

@@ -28,9 +28,9 @@ namespace awme.Controllers
         }
 
         [HttpGet(), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<List<User>>> Get()
+        public async Task<ActionResult<List<UserGetRequest>>> Get()
         {
-            List<User> users = await _userService.GetUsers();
+            List<UserGetRequest> users = await _userService.GetUsers();
             return Ok(users);
         }
 

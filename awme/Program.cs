@@ -90,6 +90,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             {
                 context.Token = context.Request.Cookies["accessToken"];
                 return Task.CompletedTask;
+            },
+            OnChallenge = context =>
+            {
+                context.Response.OnStarting(async () =>
+                {
+                    // Write to the response in any way you wish
+                    await context.Response.WriteAsync("You are not authorized.");
+                });
+
+                return Task.CompletedTask;
             }
         };
 });

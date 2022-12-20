@@ -12,6 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Data;
 
 namespace awme.Controllers
 {
@@ -63,20 +64,21 @@ namespace awme.Controllers
             }
             string token = CreateToken(verifiedUser);
 
-            return Ok();
+            return Ok(token);
         }
 
         private string CreateToken(User user)
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim("Id", user.Id.ToString()),
+                new Claim("id", user.Id.ToString()),
             };
             var roles = user.Role.ToString().Split(',');
             foreach (string role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
+            claims.Add(new Claim(ClaimTypes.Role, "Admin"));
             var key= new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                 _configuration["JwtConfig:Secret"]!));
 
@@ -84,7 +86,7 @@ namespace awme.Controllers
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(1),
+                expires: DateTime.UtcNow.AddMinutes(0.2),
                 signingCredentials: cred
                 );
 
@@ -94,7 +96,7 @@ namespace awme.Controllers
                 new CookieOptions
                 {
                     HttpOnly = true,
-                    Expires = DateTime.UtcNow.AddMinutes(2),
+                    Expires = DateTime.UtcNow.AddMinutes(5),
                     SameSite = SameSiteMode.None,
                     Secure = true,
                     IsEssential = true

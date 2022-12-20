@@ -34,7 +34,7 @@ namespace awme.Controllers
             return Ok(users);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}",Name = "GetUserById")]
         public async Task<ActionResult<User>> GetById(int id)
         {
             User? user = await _userService.GetUser(id);

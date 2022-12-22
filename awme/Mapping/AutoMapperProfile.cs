@@ -1,5 +1,6 @@
 ﻿using awme.Data.Dto.Animal;
 using awme.Data.Dto.AnimalActivity;
+using awme.Data.Dto.Collar;
 using awme.Data.Dto.Post;
 using awme.Data.Dto.Profile;
 using awme.Data.Dto.User;
@@ -18,6 +19,7 @@ namespace awme.Mapping
             CreateMap<PostAddRequest, Post>();
             CreateMap<PostUpdateRequest, Post>();
             CreateMap<User, UserGetRequest>();
+            CreateMap<Collar, CollarGetRequest>();
         }
     }
 }

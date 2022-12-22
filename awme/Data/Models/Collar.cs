@@ -5,7 +5,7 @@ namespace awme.Data.Models
 {
     public class Collar
     {
-        [Key]
+        [Key, MinLength(1)]
         public string Id { get; set; }
         public bool InUse { get; set; } = false;
         public Animal Animal { get; set; }

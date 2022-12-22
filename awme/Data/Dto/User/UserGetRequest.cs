@@ -10,7 +10,7 @@ namespace awme.Data.Dto.User
         public string Email { get; set; }
         public Role Role { get; set; } = Role.User;
         public List<Models.Animal> Animals { get; set; }
-        public List<Collar> Collars { get; set; }
+        public List<Models.Collar> Collars { get; set; }
         public Models.Profile Profile { get; set; }
     }
 }

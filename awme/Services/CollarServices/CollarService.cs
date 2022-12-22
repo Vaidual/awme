@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using awme.Data.Dto.Collar;
+using awme.Data.Dto.User;
 using awme.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,9 +46,10 @@ namespace awme.Services.CollarServices
             return await _context.Collars.Include(c => c.Animal).FirstOrDefaultAsync(el => el.Id == id);
         }
 
-        public async Task<List<Collar>> GetCollars()
+        public async Task<List<CollarGetRequest>> GetCollars()
         {
-            return await _context.Collars.ToListAsync();
+            var result = _mapper.Map(await _context.Collars.Include(c => c.Animal).Include(c => c.User).ToListAsync(), new List<CollarGetRequest>());
+            return result;
         }
     }
 }

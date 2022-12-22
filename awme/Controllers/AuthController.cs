@@ -97,7 +97,7 @@ namespace awme.Controllers
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
-            claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+            //claims.Add(new Claim(ClaimTypes.Role, "Admin"));
             var key= new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                 _configuration["JwtConfig:Secret"]!));
 
@@ -105,7 +105,7 @@ namespace awme.Controllers
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(50),
+                expires: DateTime.UtcNow.AddDays(1),
                 signingCredentials: cred
                 );
 
@@ -115,7 +115,7 @@ namespace awme.Controllers
                 new CookieOptions
                 {
                     HttpOnly = true,
-                    Expires = DateTime.UtcNow.AddMinutes(50),
+                    Expires = DateTime.UtcNow.AddDays(1),
                     SameSite = SameSiteMode.None,
                     Secure = true,
                     IsEssential = true

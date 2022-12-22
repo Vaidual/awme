@@ -1,4 +1,5 @@
-﻿using awme.Data.Models;
+﻿using awme.Data.Dto.Collar;
+using awme.Data.Models;
 using awme.Services.AnimalTypeServices;
 using awme.Services.CollarServices;
 using Microsoft.AspNetCore.Authorization;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace awme.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/collars")]
     [ApiController]
     [Authorize(Roles = "Admin")]
     public class CollarController : Controller
@@ -19,9 +20,9 @@ namespace awme.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Collar>>> GetAll()
+        public async Task<ActionResult<List<CollarGetRequest>>> GetAll()
         {
-            List<Collar> collars = await _collarService.GetCollars();
+            List<CollarGetRequest> collars = await _collarService.GetCollars();
             return Ok(collars);
         }
 
@@ -37,7 +38,7 @@ namespace awme.Controllers
         }
 
         [HttpPost(), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<Collar>> Add(string deviceId)
+        public async Task<ActionResult<Collar>> Add([FromBody] string deviceId)
         {
             if (await _collarService.CheckIfCollarExists(deviceId))
             {

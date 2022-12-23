@@ -7,6 +7,7 @@ namespace awme.Data.Models
     public enum Role
     {
         User,
-        Admin
+        Admin,
+        Manager,
     }
 }

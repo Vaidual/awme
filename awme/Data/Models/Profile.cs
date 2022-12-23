@@ -9,6 +9,8 @@ namespace awme.Data.Models
         public string Nickname { get; set; }
         public Gender? Gender { get; set; }
         public string? Location { get; set; }
+        public bool IsBanned { get; set; } = false;
+        public DateTime? BanEnd { get; set; } = null;
         public int UserId { get; set; }
         public User User { get; set; }
         public List<Profile> Followers { get; set; } = new List<Profile>();

@@ -2,6 +2,7 @@
 using awme.Data.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using awme.Data.Dto.User;
+using SimplePatch;
 
 namespace awme.Services.UserServices
 {
@@ -15,7 +16,7 @@ namespace awme.Services.UserServices
         Task<bool> CheckIfUserExistsById(int id);
         Task<bool> CheckIfUserHaveCollar(int userId, string collarId);
         Task<User?> GetUserByEmail(string email);
-        Task UpdateUserFields(User user, JsonPatchDocument<User> userUpdates);
+        Task<User> UpdateUserFields(User user, Delta<User> patch);
         Task UpdateUserRole(User user, Role role);
         Task<bool> DeleteUser(int id);
     }

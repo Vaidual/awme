@@ -1,17 +1,18 @@
 ﻿using awme.Data.Models;
-using System.ComponentModel.DataAnnotations;
 
 namespace awme.Data.Dto.Profile
 {
-    public class ProfileUpdateRequest
+    public class ProfilesGetRequest
     {
-        [Required, MinLength(1)]
+        public int Id { get; set; }
         public string Username { get; set; }
-        [Required, MinLength(1)]
         public string Nickname { get; set; }
         public Gender? Gender { get; set; }
         public string? Location { get; set; }
         public bool IsBanned { get; set; }
         public DateTime? BanEnd { get; set; }
+        public int UserId { get; set; }
+        public int Followers { get; set; }
+        public int Following { get; set; }
     }
 }

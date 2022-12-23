@@ -5,6 +5,7 @@ using awme.Migrations;
 using Azure.Core;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
+using SimplePatch;
 using User = awme.Data.Models.User;
 
 namespace awme.Services.UserServices
@@ -83,10 +84,12 @@ namespace awme.Services.UserServices
             return result;
         }
 
-        public async Task UpdateUserFields(User user, JsonPatchDocument<User> userUpdates)
+        public async Task<User> UpdateUserFields(User user, Delta<User> patch)
         {
-            userUpdates.ApplyTo(user);
+            patch.Patch(user);
+            _context.Update(user);
             await _context.SaveChangesAsync();
+            return user;
         }
 
         public async Task UpdateUserRole(User user, Role role)

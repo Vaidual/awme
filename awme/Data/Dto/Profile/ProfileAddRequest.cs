@@ -12,6 +12,8 @@ namespace awme.Data.Dto.Profile
         public Gender? Gender { get; set; }
         public string? Location { get; set; }
         [Required]
+        public bool IsBanned { get; set; }
+        public DateTime? BanEnd { get; set; }
         public int UserId { get; set; }
     }
 }

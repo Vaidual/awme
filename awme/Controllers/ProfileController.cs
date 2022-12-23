@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace awme.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/profiles")]
     [ApiController]
     [Authorize]
     public class ProfileController : ControllerBase
@@ -25,9 +25,9 @@ namespace awme.Controllers
         }
 
         [HttpGet()]
-        public async Task<ActionResult<List<Profile>>> GetProfiles()
+        public async Task<ActionResult<List<ProfilesGetRequest>>> GetProfiles()
         {
-            List<Profile> profiles = await _profileSevice.GetProfiles();
+            List<ProfilesGetRequest> profiles = await _profileSevice.GetProfiles();
             return Ok(profiles);
         }
 
@@ -92,6 +92,18 @@ namespace awme.Controllers
                 return StatusCode(409, $"This username is already taken.");
             }
             await _profileSevice.UpdateProfile(profile, request);
+            return profile;
+        }
+
+        [HttpPatch("ban/{id}")]
+        public async Task<ActionResult<Profile>> PatchBan(int id, [FromBody] ProfileBanPatchRequest patch)
+        {
+            Profile? profile = await _profileSevice.GetProfile(id);
+            if (profile == null)
+            {
+                return NotFound("The profile does not exist.");
+            }
+            await _profileSevice.UpdateProfileBan(profile, patch);
             return profile;
         }
     }

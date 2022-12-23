@@ -1,6 +1,7 @@
 global using awme.Data;
 using awme.Controllers;
 using awme.Data.Dto.Profile;
+using awme.Data.Models;
 using awme.Services.AnimalActivityServices;
 using awme.Services.AnimalServices;
 using awme.Services.AnimalTypeServices;
@@ -38,9 +39,10 @@ builder.Services.AddScoped<IAnimalActivityService, AnimalActivityService>();
 
 //builder.Services.AddSingleton(new AnimalDataController().Handle_Received_Application_Message());
 
-//DeltaConfig.Init(cfg => {
-//    cfg.AddEntity<ProfileUpdateRequest>();
-//});
+DeltaConfig.Init(cfg =>
+{
+    cfg.AddEntity<User>();
+});
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 builder.Services.AddCors(options =>

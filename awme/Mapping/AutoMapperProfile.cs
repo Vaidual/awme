@@ -20,6 +20,14 @@ namespace awme.Mapping
             CreateMap<PostUpdateRequest, Post>();
             CreateMap<User, UserGetRequest>();
             CreateMap<Collar, CollarGetRequest>();
+            CreateMap<Profile, ProfilesGetRequest>()
+                .ForMember(
+                dest => dest.Followers, 
+                opt => opt.MapFrom(src => src.Followers.Count))
+                .ForMember(
+                dest => dest.Following,
+                opt => opt.MapFrom(src => src.Following.Count));
+            CreateMap<ProfileBanPatchRequest, Profile>();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace awme.Controllers
 {
     [Route("api/collars")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, Manager")]
     public class CollarController : Controller
     {
         private readonly ICollarService _collarService;

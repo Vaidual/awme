@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using awme.Data.Dto.Profile;
+using awme.Data.Dto.User;
 using awme.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Profile = awme.Data.Models.Profile;
 
 namespace awme.Services.ProfileSevices
@@ -52,14 +54,23 @@ namespace awme.Services.ProfileSevices
             return await _context.Profiles.FirstOrDefaultAsync(el => el.Id == id);
         }
 
-        public async Task<List<Profile>> GetProfiles()
+        public async Task<List<ProfilesGetRequest>> GetProfiles()
         {
-            return await _context.Profiles.ToListAsync();
+            var profiles = await _context.Profiles.Include(p => p.Followers).Include(p => p.Following).ToListAsync();
+            var result = _mapper.Map(profiles, new List<ProfilesGetRequest>());
+            return result;
         }
 
         public async Task<Profile> UpdateProfile(Profile profile, ProfileUpdateRequest update)
         {
             _mapper.Map(update, profile);
+            await _context.SaveChangesAsync();
+            return profile;
+        }
+
+        public async Task<Profile> UpdateProfileBan(Profile profile, ProfileBanPatchRequest patch)
+        {
+            _mapper.Map(patch, profile);
             await _context.SaveChangesAsync();
             return profile;
         }

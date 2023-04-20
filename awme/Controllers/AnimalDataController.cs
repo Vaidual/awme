@@ -35,8 +35,8 @@ namespace awme.Controllers
             {
                 var mqttClientOptions = new MqttClientOptionsBuilder()
                     .WithClientId("Server")
-                    .WithTcpServer("2e429513164340e1bf76e616ee62a30c.s2.eu.hivemq.cloud")
-                    .WithCredentials("Vaidual", "12345687")
+                    .WithTcpServer("server")
+                    .WithCredentials("username", "password")
                     .WithTls()
                     .WithCleanSession()
                     .Build();
@@ -57,7 +57,14 @@ namespace awme.Controllers
                     await _animalActivityService!.AddActivity(activity);
                 };
 
-                var a = await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
+                try
+                {
+                    var a = await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("### MQTT CLIENT CONNECTION ERROR###");
+                }
                 mqttClient.DisconnectedAsync += async e =>
                 {
                     Console.WriteLine("### DISCONNECTED FROM SERVER ###");
@@ -81,7 +88,14 @@ namespace awme.Controllers
                         })
                     .Build();
 
-                var b = await mqttClient.SubscribeAsync(mqttSubscribeOptions, CancellationToken.None);
+                try
+                {
+                    var b = await mqttClient.SubscribeAsync(mqttSubscribeOptions, CancellationToken.None);
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("### MQTT CLIENT CONNECTION ERROR###");
+                }
                 Console.WriteLine("MQTT client subscribed to topic.");
 
                 Console.WriteLine("Press enter to exit.");

@@ -34,8 +34,8 @@ namespace awme.Controllers
             using (var mqttClient = mqttFactory.CreateMqttClient())
             {
                 var mqttClientOptions = new MqttClientOptionsBuilder()
-                    .WithClientId("Server")
-                    .WithTcpServer("server")
+                    .WithClientId("Backend")
+                    .WithTcpServer("2e429513164340e1bf76e616ee62a30c.s2.eu.hivemq.cloud")
                     .WithCredentials("username", "password")
                     .WithTls()
                     .WithCleanSession()

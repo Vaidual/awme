@@ -73,10 +73,10 @@ builder.Services.AddSwaggerGen(options => {
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 }).AddSwaggerGenNewtonsoftSupport();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.Cookie.Name = "accessToken";
-    })
+    //.AddCookie(options =>
+    //{
+    //    options.Cookie.Name = "accessToken";
+    //})
     .AddJwtBearer(options => {
         options.TokenValidationParameters = new TokenValidationParameters
         {
